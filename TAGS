@@ -1,0 +1,85 @@
+
+arraylist.c,542
+enum { CAPACITY_MIN 6,84
+enum { CAPACITY_MIN = 8, CAPACITY_COEFF 6,84
+typedef struct arraylist_s8,132
+  object **data;data10,161
+  int size;11,178
+  int capacity;12,190
+} arraylist;13,206
+arraylist *arraylist_new(arraylist_new15,220
+void arraylist_free(20,306
+static void arraylist_reallocate(26,380
+void arraylist_constructor(34,640
+void arraylist_destructor(40,752
+void arraylist_add(54,1074
+int arraylist_size(62,1284
+int arraylist_capacity(67,1353
+object *arraylist_get(arraylist_get72,1430
+void arraylist_set(79,1577
+
+arraylist.h,68
+#define ARRAYLIST_H2,20
+typedef struct arraylist_s arraylist;6,62
+
+fruit.c,93
+#define FRUIT_STR(4,40
+static const char *fruit_str[fruit_str6,73
+Fruit fruit_get(13,182
+
+fruit.h,105
+#define FRUIT_H2,16
+   LEMON,6,50
+   ORANGE,7,60
+   MANDARIN,8,71
+   FRUIT_MAX9,84
+  } Fruit;10,97
+
+object.c,331
+void object_destructor_vf(5,66
+void object_free_vf(13,202
+void object_copy_vf(19,273
+vtable object_vt 33,615
+object *object_new(object_new35,659
+void object_free(40,733
+void object_constructor(45,811
+object *object_copy_constructor(object_copy_constructor54,1030
+void object_copy(61,1206
+void object_destructor(66,1313
+
+object_cstr.c,88
+object_cstr *object_cstr_new(object_cstr_new5,71
+void object_cstr_constructor(10,166
+
+object_cstr.h,74
+#define OBJECT_CSTR_H2,22
+typedef struct object_cstr_s object_cstr;6,66
+
+object_cstr_impl.h,108
+#define OBJECT_CSTR_IMPL_H2,27
+typedef struct object_cstr_s6,81
+  object base;8,112
+} object_cstr;9,127
+
+object.h,59
+#define OBJECT_H2,17
+typedef struct object_s object;4,35
+
+object_impl.h,406
+#define OBJECT_IMPL_H2,22
+enum {OBJECT_DESTRUCTOR,OBJECT_DESTRUCTOR6,66
+enum {OBJECT_DESTRUCTOR, OBJECT_FREE,6,66
+enum {OBJECT_DESTRUCTOR, OBJECT_FREE, OBJECT_COPY}OBJECT_COPY6,66
+typedef struct vtable_s8,119
+  void (**fvoid)fvoid10,145
+} vtable;11,165
+typedef struct object_s13,176
+  vtable *vt;vt15,202
+  void *data;data16,216
+  int size;17,230
+  int object_size;18,242
+} object;19,261
+
+program.c,57
+static char *read_line(read_line7,102
+int main(17,287

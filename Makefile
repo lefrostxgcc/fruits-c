@@ -7,14 +7,15 @@ TARGET := program
 
 vpath %.h $(INCLUDE_DIRS)
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re etags
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
 
-$(OBJS) : $(HEADERS)
+etags:
+	etags *.[ch]
 
 clean:
 	-rm -f $(OBJS)
