@@ -1,5 +1,5 @@
 
-arraylist.c,542
+arraylist.c,544
 enum { CAPACITY_MIN 6,84
 enum { CAPACITY_MIN = 8, CAPACITY_COEFF 6,84
 typedef struct arraylist_s8,132
@@ -8,15 +8,15 @@ typedef struct arraylist_s8,132
   int capacity;12,190
 } arraylist;13,206
 arraylist *arraylist_new(arraylist_new15,220
-void arraylist_free(20,306
-static void arraylist_reallocate(26,380
-void arraylist_constructor(34,640
-void arraylist_destructor(40,752
-void arraylist_add(54,1074
-int arraylist_size(62,1284
-int arraylist_capacity(67,1353
-object *arraylist_get(arraylist_get72,1430
-void arraylist_set(79,1577
+void arraylist_delete(20,306
+static void arraylist_reallocate(25,364
+void arraylist_constructor(33,624
+void arraylist_destructor(39,736
+void arraylist_add(53,1058
+int arraylist_size(61,1268
+int arraylist_capacity(66,1337
+object *arraylist_get(arraylist_get71,1414
+void arraylist_set(78,1561
 
 arraylist.h,68
 #define ARRAYLIST_H2,20
@@ -34,6 +34,23 @@ fruit.h,105
    MANDARIN,8,71
    FRUIT_MAX9,84
   } Fruit;10,97
+
+fruitreader.c,433
+typedef struct FruitReader_s5,65
+  char dummy;7,96
+} FruitReader;8,110
+static char *read_line(read_line10,126
+fruitreader *fruitreader_new(fruitreader_new20,311
+void fruitreader_delete(25,406
+void fruitreader_constructor(30,469
+arraylist *fruitreader_read(fruitreader_read35,544
+arraylist *fruitreader_read(fruitreader_read40,638
+arraylist *fruitreader_read(fruitreader_read48,811
+void fruitreader_destructor(67,1364
+
+fruitreader.h,74
+#define FRUITREADER_H2,22
+typedef struct FruitReader_s FruitReader;7,88
 
 object.c,331
 void object_destructor_vf(5,66
@@ -80,6 +97,5 @@ typedef struct object_s13,176
   int object_size;18,242
 } object;19,261
 
-program.c,57
-static char *read_line(read_line7,102
-int main(17,287
+program.c,15
+int main(5,68

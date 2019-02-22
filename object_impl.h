@@ -10,13 +10,13 @@ typedef struct vtable_s
   void (**fvoid)();
 } vtable;
 
-typedef struct object_s
+struct object_s
 {
   vtable *vt;
   void *data;
   int size;
   int object_size;
-} object;
+};
 
 void object_destructor_vf(object * const this);
 void object_free_vf(object ** const this);

@@ -6,7 +6,7 @@
 typedef struct arraylist_s arraylist;
 
 arraylist *arraylist_new(void);
-void arraylist_free(arraylist **this);
+void arraylist_delete(arraylist *this);
 void arraylist_constructor(arraylist * const this);
 void arraylist_destructor(arraylist * const this);
 void arraylist_add(arraylist * const this, object *element);

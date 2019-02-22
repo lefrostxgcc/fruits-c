@@ -17,10 +17,9 @@ arraylist *arraylist_new(void)
   return (arraylist *) malloc(sizeof(arraylist));
 }
 
-void arraylist_free(arraylist **this)
+void arraylist_delete(arraylist *this)
 {
-  free(*this);
-  *this = NULL;
+  free(this);
 }
 
 static void arraylist_reallocate(arraylist * const this)
