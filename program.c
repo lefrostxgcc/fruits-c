@@ -6,7 +6,8 @@ int main(void)
 {
   fruitreader *fr = fruitreader_new();
   fruitreader_constructor(fr);
-  arraylist *list = fruitreader_readf(fr, "fruits.txt");
+  const char *s = "LEMON\nORANGE\nMANDARIN\n\n";
+  arraylist *list = fruitreader_read_from_string(fr, s);
   int count = arraylist_size(list);
   printf("%d\n", count);
   arraylist_destructor(list);
