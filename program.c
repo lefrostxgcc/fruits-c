@@ -1,18 +1,24 @@
 #include <stdio.h>
 #include <arraylist.h>
 #include <fruitreader.h>
+#include <fruitreaderfile.h>
+
+static void start(fruitreader *fr);
 
 int main(void)
 {
-  fruitreader *fr = fruitreader_new();
-  fruitreader_constructor(fr);
-  const char *s = "LEMON\nORANGE\nMANDARIN\n\n";
-  arraylist *list = fruitreader_read_from_string(fr, s);
+  fruitreaderfile *fr = fruitreaderfile_new();
+  fruitreaderfile_constructor(fr, "fruits.txt");
+  start((fruitreader *) fr);
+  fruitreader_destructor((fruitreader *) fr);
+  fruitreader_delete((fruitreader *) fr);
+}
+
+static void start(fruitreader *fr)
+{
+  arraylist *list = fruitreader_read(fr);
   int count = arraylist_size(list);
   printf("%d\n", count);
   arraylist_destructor(list);
   arraylist_delete(list);
-  fruitreader_destructor(fr);
-  fruitreader_delete(fr);
 }
-

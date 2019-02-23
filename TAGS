@@ -35,22 +35,88 @@ fruit.h,105
    FRUIT_MAX9,84
   } Fruit;10,97
 
-fruitreader.c,433
-typedef struct FruitReader_s5,65
-  char dummy;7,96
-} FruitReader;8,110
-static char *read_line(read_line10,126
-fruitreader *fruitreader_new(fruitreader_new20,311
-void fruitreader_delete(25,406
-void fruitreader_constructor(30,469
-arraylist *fruitreader_read(fruitreader_read35,544
-arraylist *fruitreader_read(fruitreader_read40,638
-arraylist *fruitreader_read(fruitreader_read48,811
-void fruitreader_destructor(67,1364
+fruitreader.c,544
+fruitreader_vtable fruitreader_vt 18,329
+fruitreader *fruitreader_new(fruitreader_new23,442
+void fruitreader_delete(28,536
+arraylist *fruitreader_read(fruitreader_read33,607
+void fruitreader_destructor(38,720
+void fruitreader_destructor_vf(43,828
+static char *read_line(read_line49,928
+arraylist *fruitreader_read_vf(fruitreader_read_vf59,1113
+arraylist *fruitreader_read(fruitreader_read80,1698
+arraylist *fruitreader_readf(fruitreader_readf85,1798
+arraylist *fruitreader_read_from_string(fruitreader_read_from_string95,2017
+
+fruitreaderfile.c,156
+fruitreaderfile_vtable fruitreaderfile_vt 15,279
+fruitreaderfile *fruitreaderfile_new(fruitreaderfile_new21,410
+void fruitreaderfile_constructor(26,520
+
+fruitreaderfile.h,86
+#define FRUITREADERFILE_H2,26
+typedef struct fruitreaderfile_s fruitreaderfile;6,79
+
+fruitreaderfile_impl.h,249
+#define FRUITREADERFILE_IMPL_H2,31
+typedef struct fruitreaderfile_vtable_s7,123
+  void (**fvoid)fvoid9,165
+  arraylist *(**farraylist(farraylist10,185
+} fruitreaderfile_vtable;11,216
+struct fruitreaderfile_s13,243
+  fruitreader base;15,270
 
 fruitreader.h,74
 #define FRUITREADER_H2,22
-typedef struct FruitReader_s FruitReader;7,88
+typedef struct fruitreader_s fruitreader;6,69
+
+fruitreader_impl.h,396
+#define FRUITREADER_IMPL_H2,27
+enum {FRUITREADER_DESTRUCTOR,FRUITREADER_DESTRUCTOR7,100
+enum {FRUITREADER_DESTRUCTOR, FRUITREADER_READ}FRUITREADER_READ7,100
+typedef struct fruitreader_vtable_s9,150
+  void (**fvoid)fvoid11,188
+  arraylist * (**farraylist)farraylist12,208
+} fruitreader_vtable;13,240
+struct fruitreader_s15,263
+  fruitreader_vtable *vt;vt17,286
+  FILE *br;br18,312
+
+fruitreaderscan.c,156
+fruitreaderscan_vtable fruitreaderscan_vt 15,279
+fruitreaderscan *fruitreaderscan_new(fruitreaderscan_new21,410
+void fruitreaderscan_constructor(26,520
+
+fruitreaderscan.h,86
+#define FRUITREADERSCAN_H2,26
+typedef struct fruitreaderscan_s fruitreaderscan;6,79
+
+fruitreaderscan_impl.h,249
+#define FRUITREADERSCAN_IMPL_H2,31
+typedef struct fruitreaderscan_vtable_s7,123
+  void (**fvoid)fvoid9,165
+  arraylist *(**farraylist)farraylist10,185
+} fruitreaderscan_vtable;11,216
+struct fruitreaderscan_s13,243
+  fruitreader base;15,270
+
+fruitreaderstring.c,168
+fruitreaderstring_vtable fruitreaderstring_vt 16,305
+fruitreaderstring *fruitreaderstring_new(fruitreaderstring_new22,444
+void fruitreaderstring_constructor(27,562
+
+fruitreaderstring.h,92
+#define FRUITREADERSTRING_H2,28
+typedef struct fruitreaderstring_s fruitreaderstring;6,83
+
+fruitreaderstring_impl.h,257
+#define FRUITREADERSTRING_IMPL_H2,33
+typedef struct fruitreaderstring_vtable_s7,129
+  void (**fvoid)fvoid9,173
+  arraylist *(**farraylist(farraylist10,193
+} fruitreaderstring_vtable;11,224
+struct fruitreaderstring_s13,253
+  fruitreader base;15,282
 
 object.c,331
 void object_destructor_vf(5,66
@@ -82,7 +148,7 @@ object.h,59
 #define OBJECT_H2,17
 typedef struct object_s object;4,35
 
-object_impl.h,406
+object_impl.h,381
 #define OBJECT_IMPL_H2,22
 enum {OBJECT_DESTRUCTOR,OBJECT_DESTRUCTOR6,66
 enum {OBJECT_DESTRUCTOR, OBJECT_FREE,6,66
@@ -90,12 +156,12 @@ enum {OBJECT_DESTRUCTOR, OBJECT_FREE, OBJECT_COPY}OBJECT_COPY6,66
 typedef struct vtable_s8,119
   void (**fvoid)fvoid10,145
 } vtable;11,165
-typedef struct object_s13,176
-  vtable *vt;vt15,202
-  void *data;data16,216
-  int size;17,230
-  int object_size;18,242
-} object;19,261
+struct object_s13,176
+  vtable *vt;vt15,194
+  void *data;data16,208
+  int size;17,222
+  int object_size;18,234
 
-program.c,15
-int main(5,68
+program.c,42
+int main(8,134
+static void start(17,359

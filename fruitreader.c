@@ -1,12 +1,52 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <fruitreader.h>
 #include <fruit.h>
+#include <fruitreader_impl.h>
+#include <arraylist.h>
 
-typedef struct fruitreader_s
+void (*fruitreader_void[])() =
+  {
+   [FRUITREADER_DESTRUCTOR] = &fruitreader_destructor_vf,
+  };
+
+arraylist *(*fruitreader_arraylist[])() =
+  {
+   [FRUITREADER_READ] = &fruitreader_read_vf,
+  };
+
+fruitreader_vtable fruitreader_vt =
+  {
+   .fvoid = fruitreader_void,
+   .farraylist = fruitreader_arraylist
+  };
+
+fruitreader *fruitreader_new(void)
 {
-  char dummy;
-} fruitreader;
+  return (fruitreader *) malloc(sizeof(fruitreader));
+}
+
+void fruitreader_delete(fruitreader *this)
+{
+  free((void *) this);
+}
+
+void fruitreader_constructor(fruitreader * const this)
+{
+  this->vt = &fruitreader_vt;
+  this->br = NULL;
+}
+
+void fruitreader_destructor(fruitreader * const this)
+{
+  this->vt->fvoid[FRUITREADER_DESTRUCTOR](this);
+}
+
+void fruitreader_destructor_vf(fruitreader * const this)
+{
+  if (this->br)
+    fclose(this->br);
+}
 
 static char *read_line(char *buf, int size, FILE *stream)
 {
@@ -18,63 +58,19 @@ static char *read_line(char *buf, int size, FILE *stream)
   return buf;
 }
 
-fruitreader *fruitreader_new(void)
-{
-  return (fruitreader *) malloc(sizeof (fruitreader));
-}
-
-void fruitreader_delete(fruitreader *this)
-{
-  free(this);
-}
-
-void fruitreader_constructor(fruitreader * const this)
-{
-  (void) this;
-}
-
 arraylist *fruitreader_read(fruitreader * const this)
 {
-  return fruitreader_reads(this, stdin);
+  return this->vt->farraylist[FRUITREADER_READ](this);
 }
 
-arraylist *fruitreader_readf(fruitreader * const this, const char *filename)
-{
-  FILE *f = fopen(filename, "r");
-  if (!f)
-    return NULL;
-  arraylist *list = fruitreader_reads(this, f);
-  fclose(f);
-  return list;
-}
-
-arraylist *fruitreader_read_from_string(fruitreader * const this,
-                                        const char *input)
-{
-  const char pattern[] = "chipfruitreaderXXXXXX";
-  const size_t tmpdir_len = strlen(P_tmpdir);
-  const size_t path_len = tmpdir_len + 1 + sizeof pattern;
-  char *path = (char *) malloc(path_len);
-  memcpy(path, P_tmpdir, tmpdir_len);
-  memcpy(path + tmpdir_len, "/", 1);
-  memcpy(path + tmpdir_len + 1, pattern, sizeof pattern);
-  int fd = mkstemp(path);
-  FILE *f = fdopen(fd, "r+");
-  fprintf(f, "%s", input);
-  rewind(f);
-  arraylist *list = fruitreader_reads(this, f);
-  fclose(f);
-  remove(path);
-  free(path);
-  return list;
-}
-
-arraylist *fruitreader_reads(fruitreader * const this, FILE *stream)
+arraylist *fruitreader_read_vf(fruitreader * const this)
 {
   char line[80];
   arraylist *list = arraylist_new();
   arraylist_constructor(list);
-  while (strcmp(read_line(line, sizeof line, stream), "") != 0)
+  if (this->br == NULL)
+    return list;
+  while (strcmp(read_line(line, sizeof line, this->br), "") != 0)
     {
       Fruit fruit = fruit_get(line);
       if (fruit == FRUIT_MAX)
@@ -86,9 +82,4 @@ arraylist *fruitreader_reads(fruitreader * const this, FILE *stream)
       object_free(&object_fruit);
     }
   return list;
-}
-
-void fruitreader_destructor(fruitreader * const this)
-{
-  (void) this;
 }

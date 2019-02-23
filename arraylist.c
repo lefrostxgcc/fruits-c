@@ -38,6 +38,8 @@ void arraylist_constructor(arraylist * const this)
 
 void arraylist_destructor(arraylist * const this)
 {
+  if (!this)
+    return;
   for (int i = 0; i < this->size; i++)
       if (this->data[i])
         {
@@ -52,6 +54,8 @@ void arraylist_destructor(arraylist * const this)
 
 void arraylist_add(arraylist * const this, object *element)
 {
+  if (!this || !element)
+    return;
   if (this->size >= this->capacity)
     arraylist_reallocate(this);
   this->data[this->size] = object_copy_constructor(element);
@@ -60,24 +64,24 @@ void arraylist_add(arraylist * const this, object *element)
 
 int arraylist_size(arraylist * const this)
 {
-  return this->size;
+  return this ? this->size : 0;
 }
 
 int arraylist_capacity(arraylist * const this)
 {
-  return this->capacity;
+  return this ? this->capacity : 0;
 }
 
 object *arraylist_get(arraylist * const this, int index)
 {
-  if (index < 0 || index >= this->size)
+  if (!this || index < 0 || index >= this->size)
     return NULL;
   return this->data[index];
 }
 
 void arraylist_set(arraylist * const this, object *element, int index)
 {
-  if (index < 0 || index >= this->size)
+  if (!this || !element || index < 0 || index >= this->size)
     return;
   object_destructor(this->data[index]);
   free(this->data[index]);
