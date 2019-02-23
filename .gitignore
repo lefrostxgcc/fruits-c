@@ -1,4 +1,6 @@
 program
+Doxyfile
+html/
 #*#
 \.\#*
 \#*\#

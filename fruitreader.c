@@ -5,6 +5,13 @@
 #include <fruitreader_impl.h>
 #include <arraylist.h>
 
+/*!
+ \file
+ \author Chip
+ Базовый класс для считывания списка фруктов.
+ Содержит основной метод для получения списка из BufferedReader потока.
+ */
+
 void (*fruitreader_void[])() =
   {
    [FRUITREADER_DESTRUCTOR] = &fruitreader_destructor_vf,
@@ -58,6 +65,10 @@ static char *read_line(char *buf, int size, FILE *stream)
   return buf;
 }
 
+/**
+ Считывает данные из потока
+ \return сформированный список фруктов
+ */
 arraylist *fruitreader_read(fruitreader * const this)
 {
   return this->vt->farraylist[FRUITREADER_READ](this);
