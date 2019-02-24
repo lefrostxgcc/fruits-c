@@ -12,6 +12,11 @@ typedef enum
    LEMON,
    ORANGE,
    MANDARIN,
+   FERRARI,
+   TESLA,
+   RENAULT,
+   MERCEDES,
+   BMW,
    FRUIT_MAX
   } Fruit;
 
