@@ -76,13 +76,16 @@ arraylist *fruitreader_read(fruitreader * const this)
 
 arraylist *fruitreader_read_vf(fruitreader * const this)
 {
-  char line[80];
+  char buf[80];
   arraylist *list = arraylist_new();
   arraylist_constructor(list);
   if (this->br == NULL)
     return list;
-  while (strcmp(read_line(line, sizeof line, this->br), "") != 0)
+  while (1)
     {
+      char *line = read_line(buf, sizeof buf, this->br);
+      if (line == NULL || strcmp(line, "") == 0)
+        break;
       Fruit fruit = fruit_get(line);
       if (fruit == FRUIT_MAX)
         continue;

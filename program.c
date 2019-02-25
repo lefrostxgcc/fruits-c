@@ -55,7 +55,7 @@ static fruitreader *parse_args(int argc, char *argv[])
       size_t items_len = 0;
       for (int i = 2; i < argc; i++)
         items_len += strlen(argv[i]) + 1;
-      items_len += 1;
+      /* items_len += 1; */
       items = (char *) malloc(items_len + 1);
       if (items == NULL)
         return NULL;
@@ -64,7 +64,7 @@ static fruitreader *parse_args(int argc, char *argv[])
           strcat(items, argv[i]);
           strcat(items, "\n");
         }
-      strcat(items, "\n");
+      /* strcat(items, "\n"); */
       fruitreaderstring_constructor(frstring, items);
       free(items);
       fr = (fruitreader *) frstring;
