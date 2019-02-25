@@ -16,6 +16,7 @@
 #include <fruitreaderstring.h>
 
 static void start(fruitreader *fr);
+static fruitreader *parse_args(int argc, char *argv[]);
 static void show_manual(void);
 static char *chip_concat(const char *s1, const char *s2);
 
@@ -24,40 +25,53 @@ static char *chip_concat(const char *s1, const char *s2);
 */
 int main(int argc, char *argv[])
 {
-  if (argc <= 1)
-    {
-      show_manual();
-      return 0;
-    }
-  fruitreader *fr;
-  if (strcmp(argv[1], "-file") == 0)
+  fruitreader *fr = parse_args(argc, argv);
+  if (fr == NULL)
+    return 1;
+  start(fr);
+  fruitreader_destructor(fr);
+  fruitreader_delete(fr);
+}
+
+static fruitreader *parse_args(int argc, char *argv[])
+{
+  fruitreader *fr = NULL;
+  if (argc == 3 && strcmp(argv[1], "-file") == 0)
     {
       fruitreaderfile *frfile = fruitreaderfile_new();
       fruitreaderfile_constructor(frfile, argv[2]);
       fr = (fruitreader *) frfile;
     }
-  else if (strcmp(argv[1], "-scan") == 0)
+  else if (argc == 2 && strcmp(argv[1], "-scan") == 0)
     {
       fruitreaderscan *frscan = fruitreaderscan_new();
       fruitreaderscan_constructor(frscan);
       fr = (fruitreader *) frscan;
     }
-  else if (strcmp(argv[1], "-data") == 0)
+  else if (argc >= 3 && strcmp(argv[1], "-data") == 0)
     {
       fruitreaderstring *frstring = fruitreaderstring_new();
-      char *s = chip_concat(argv[2], "\n\n");
-      fruitreaderstring_constructor(frstring, s);
-      free(s);
+      char *items = NULL;
+      size_t items_len = 0;
+      for (int i = 2; i < argc; i++)
+        items_len += strlen(argv[i]) + 1;
+      items_len += 1;
+      items = (char *) malloc(items_len + 1);
+      if (items == NULL)
+        return NULL;
+      for (int i = 2; i < argc; i++)
+        {
+          strcat(items, argv[i]);
+          strcat(items, "\n");
+        }
+      strcat(items, "\n");
+      fruitreaderstring_constructor(frstring, items);
+      free(items);
       fr = (fruitreader *) frstring;
     }
-  if (fr == NULL)
-    {
-      show_manual();
-      return 0;
-    }
-  start(fr);
-  fruitreader_destructor(fr);
-  fruitreader_delete(fr);
+  else
+    show_manual();
+  return fr;
 }
 
 static void show_manual(void)

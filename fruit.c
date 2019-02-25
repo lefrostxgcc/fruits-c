@@ -7,7 +7,12 @@ static const char *fruit_str[] =
   {
    FRUIT_STR(LEMON),
    FRUIT_STR(ORANGE),
-   FRUIT_STR(MANDARIN)
+   FRUIT_STR(MANDARIN),
+   FRUIT_STR(FERRARI),
+   FRUIT_STR(TESLA),
+   FRUIT_STR(RENAULT),
+   FRUIT_STR(MERCEDES),
+   FRUIT_STR(BMW)
   };
 
 Fruit fruit_get(const char *line)
