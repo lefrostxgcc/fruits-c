@@ -1,10 +1,10 @@
 /*!
- \file
- \author Chip
- Проект - Дед Мороз.
- Демонстрация ОО возможностей
- на примере решения конкретной задачи
- */
+  \file
+  \author Chip
+  Проект - Дед Мороз.
+  Демонстрация ОО возможностей
+  на примере решения конкретной задачи
+*/
 
 #include <stdio.h>
 #include <string.h>
@@ -13,7 +13,7 @@
 #include <fruitreader.h>
 #include <fruitreaderfile.h>
 #include <fruitreaderscan.h>
-#include <fruitreaderstring.h>
+#include <fruitreaderstringarray.h>
 
 static void start(fruitreader *fr);
 static fruitreader *parse_args(int argc, char *argv[]);
@@ -50,24 +50,9 @@ static fruitreader *parse_args(int argc, char *argv[])
     }
   else if (argc >= 3 && strcmp(argv[1], "-data") == 0)
     {
-      fruitreaderstring *frstring = fruitreaderstring_new();
-      char *items = NULL;
-      size_t items_len = 0;
-      for (int i = 2; i < argc; i++)
-        items_len += strlen(argv[i]) + 1;
-      /* items_len += 1; */
-      items = (char *) malloc(items_len + 1);
-      if (items == NULL)
-        return NULL;
-      for (int i = 2; i < argc; i++)
-        {
-          strcat(items, argv[i]);
-          strcat(items, "\n");
-        }
-      /* strcat(items, "\n"); */
-      fruitreaderstring_constructor(frstring, items);
-      free(items);
-      fr = (fruitreader *) frstring;
+      fruitreaderstringarray *frarray = fruitreaderstringarray_new();
+      fruitreaderstringarray_constructor(frarray, argv + 2, argc - 2);
+      fr = (fruitreader *) frarray;
     }
   else
     show_manual();
@@ -84,9 +69,9 @@ static void show_manual(void)
 }
 
 /**
- Решение основной задачи
- \param[in] fr - Выбранный класс для считывания начальных данных
- */
+   Решение основной задачи
+   \param[in] fr - Выбранный класс для считывания начальных данных
+*/
 static void start(fruitreader *fr)
 {
   arraylist *list = fruitreader_read(fr);
