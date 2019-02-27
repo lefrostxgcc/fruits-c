@@ -27,5 +27,6 @@ typedef enum
   Иначе - значение null.
 */
 Fruit fruit_get(const char *line);
+const char *fruit_get_str(Fruit fruit);
 
 #endif

@@ -10,6 +10,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <arraylist.h>
+#include <fruit.h>
+#include <logic.h>
 #include <fruitreader.h>
 #include <fruitreaderfile.h>
 #include <fruitreaderscan.h>
@@ -75,8 +77,12 @@ static void show_manual(void)
 static void start(fruitreader *fr)
 {
   arraylist *list = fruitreader_read(fr);
-  int count = arraylist_size(list);
-  printf("%d\n", count);
+  Logic *logic = logic_new();
+  logic_constructor(logic, list);
+  printf("%d\n", logic_get_count(logic));
+  printf("%s\n", fruit_get_str(logic_get_fruit_max(logic)));
+  logic_destructor(logic);
+  logic_delete(logic);
   arraylist_destructor(list);
   arraylist_delete(list);
 }

@@ -58,6 +58,20 @@ object *object_copy_constructor(object *element)
   return p;
 }
 
+void *object_data(object * const this)
+{
+  if (!this)
+    return NULL;
+  return this->data;
+}
+
+int object_size(object * const this)
+{
+  if (!this)
+    return 0;
+  return this->size;
+}
+
 void object_copy(object * const this, object *element)
 {
   this->vt->fvoid[OBJECT_COPY](this, element);
