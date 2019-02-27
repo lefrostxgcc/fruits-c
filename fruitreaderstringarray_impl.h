@@ -4,9 +4,16 @@
 #include <fruitreaderstring_impl.h>
 #include <fruitreaderstringarray.h>
 
+typedef struct fruitreaderstringarray_vtable_s
+{
+  void (**fvoid)();
+  arraylist * (**farraylist)();
+} fruitreaderstringarray_vtable;
+
 struct fruitreaderstringarray_s
 {
-  fruitreaderstring base;
+  fruitreaderstringarray_vtable *vt;
+  FILE *br;
 };
 
 void fruitreaderstringarray_destructor_vf(fruitreaderstringarray * const this);
@@ -17,6 +24,5 @@ arraylist *fruitreaderstringarray_read_vf(fruitreaderstringarray * const this);
   \return Строка из элементов массива, разделённых \n
 */
 char *array_to_string(char *array[], int size);
-extern fruitreader_vtable fruitreaderstringarray_vt;
 
 #endif

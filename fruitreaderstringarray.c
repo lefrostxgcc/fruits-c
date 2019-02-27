@@ -3,17 +3,17 @@
 #include <stdlib.h>
 #include <fruitreaderstringarray_impl.h>
 
-void (*fruitreaderstringarray_void[])() =
+static void (*fruitreaderstringarray_void[])() =
   {
    [FRUITREADER_DESTRUCTOR] = &fruitreader_destructor_vf,
   };
 
-arraylist *(*fruitreaderstringarray_arraylist[])() =
+static arraylist *(*fruitreaderstringarray_arraylist[])() =
   {
    [FRUITREADER_READ] = &fruitreader_read_vf,
   };
 
-fruitreader_vtable fruitreaderstringarray_vt =
+static fruitreaderstringarray_vtable fruitreaderstringarray_vt =
   {
    .fvoid = fruitreaderstringarray_void,
    .farraylist = fruitreaderstringarray_arraylist
@@ -29,6 +29,7 @@ void fruitreaderstringarray_constructor(fruitreaderstringarray * const this,
 {
   char *s = array_to_string(array, size);
   fruitreaderstring_constructor((fruitreaderstring *) this, s);
+  this->vt = &fruitreaderstringarray_vt;
   free(s);
 }
 

@@ -20,6 +20,5 @@ struct fruitreader_s
 
 void fruitreader_destructor_vf(fruitreader * const this);
 arraylist *fruitreader_read_vf(fruitreader * const this);
-extern fruitreader_vtable fruitreader_vt;
 
 #endif
