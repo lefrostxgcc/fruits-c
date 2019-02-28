@@ -79,8 +79,9 @@ static void start(fruitreader *fr)
   arraylist *list = fruitreader_read(fr);
   Logic *logic = logic_new();
   logic_constructor(logic, list);
-  printf("%d\n", logic_get_count(logic));
-  printf("%s\n", fruit_get_str(logic_get_fruit_max(logic)));
+  char *s = logic_get_task(logic);
+  printf("%s\n", s ? s : "task error");
+  free(s);
   logic_destructor(logic);
   logic_delete(logic);
   arraylist_destructor(list);
