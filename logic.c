@@ -1,4 +1,4 @@
-#include <logic.h>
+#include <logic_impl.h>
 #include <object.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,15 +25,26 @@ static const int task_name_lens[] =
    sizeof ("Not Task") - 1
   };
 
+static void (*logic_void[])() =
+  {
+   [LOGIC_DESTRUCTOR] = &logic_destructor_vf,
+  };
+
+static char *(*logic_charp[])() =
+  {
+   [LOGIC_CONVERT] = &logic_convert_vf,
+  };
+
+static logic_vtbl logic_vt =
+  {
+   .fvoid = logic_void,
+   .fcharp = logic_charp
+  };
+
 const char *task_get_str(Task task)
 {
   return task_str[task >= 0 && task < TASKMAX ? task : TASKMAX];
 }
-
-struct Logic_s
-{
-  ArrayList *list;
-};
 
 struct chip_string
 {
@@ -76,7 +87,23 @@ void logic_constructor(Logic * const this, ArrayList *list)
 {
   if (!this)
     return;
+  this->vptr = &logic_vt;
   this->list = list;
+}
+
+char *logic_convert_vf(Convertable * const this, const HashMap *map)
+{
+  return logic_convert((Logic *) this, map);
+}
+
+char *logic_convert(Logic * const this, const HashMap *map)
+{
+  return strdup("");
+}
+
+void logic_destructor_vf(Convertable * const this)
+{
+  logic_destructor((Logic *) this);
 }
 
 void logic_destructor(Logic * const this)
