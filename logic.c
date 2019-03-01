@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdarg.h>
 
 #define TASK_STR(TASK) #TASK
 
@@ -39,6 +40,25 @@ struct chip_string
   char *s;
   size_t len;
 };
+
+static char *chip_concat(char *s, ...)
+{
+  if (s == NULL)
+    return NULL;
+  va_list ap;
+  char *s_concat = s;
+  const char *p = NULL;
+  va_start(ap, s);
+  while ((p = va_arg(ap, const char *)) != NULL)
+    {
+      size_t p_len = strlen(p);
+      memcpy(s_concat, p, p_len);
+      s_concat += p_len;
+    }
+  *s_concat = '\0';
+  va_end(ap);
+  return s_concat;
+}
 
 static int logic_get_fruit_count(Logic *const this, Fruit find);
 
@@ -105,6 +125,36 @@ char *logic_get_task_raw(Logic * const this)
       p += task_answers[task].len;
       *p++ = '\n';
     }
+  *p = '\0';
+  for (Task task = 0; task < TASKMAX; task++)
+    free(task_answers[task].s);
+  return answer;
+}
+
+char *logic_get_task_xml(Logic * const this)
+{
+  struct chip_string *task_answers = logic_get_task_answers(this);
+  if (task_answers == NULL)
+    return NULL;
+#define XML_HEADER "<?xml version=\"1.0\">\n"
+#define XML_ROOT_NAME "TASKS"
+  size_t answer_len = sizeof (XML_HEADER) + 2 * sizeof(XML_ROOT_NAME) + 6;
+  for (Task task = 0; task < TASKMAX; task++)
+    answer_len += task_name_lens[task] * 2 + task_answers[task].len + 10;
+  char *answer = (char *) malloc(answer_len + 1);
+  if (answer == NULL)
+    return NULL;
+  char *p = answer;
+  *p = '\0';
+  p = chip_concat(p, XML_HEADER, "<", XML_ROOT_NAME, ">\n", NULL);
+  for (Task task = 0; task < TASKMAX; task++)
+    {
+      p = chip_concat(p, "    <", task_get_str(task), ">",
+                      task_answers[task].s,
+                      "</", task_get_str(task), ">\n", NULL
+                      );
+    }
+  p = chip_concat(p, "<", XML_ROOT_NAME, "/>", NULL);
   *p = '\0';
   for (Task task = 0; task < TASKMAX; task++)
     free(task_answers[task].s);
