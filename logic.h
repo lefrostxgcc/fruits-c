@@ -18,8 +18,10 @@ typedef enum
 Logic *logic_new();
 void logic_constructor(Logic * const this, arraylist *list);
 void logic_destructor(Logic * const this);
-char *logic_get_task(Logic * const this);
-char *logic_get_task_id(Logic * const this, Task task);
+char *logic_get_task_raw(Logic * const this);
+char *logic_get_task_xml(Logic * const this);
+char *logic_get_task_json(Logic * const this);
+char *logic_get_task(Logic * const this, Task task);
 int logic_get_count(Logic * const this);
 int logic_get_diff_count(Logic * const this);
 int logic_get_set_count(Logic * const this);

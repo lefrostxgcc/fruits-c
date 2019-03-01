@@ -79,7 +79,7 @@ static void start(fruitreader *fr)
   arraylist *list = fruitreader_read(fr);
   Logic *logic = logic_new();
   logic_constructor(logic, list);
-  char *s = logic_get_task(logic);
+  char *s = logic_get_task_raw(logic);
   printf("%s\n", s ? s : "task error");
   free(s);
   logic_destructor(logic);

@@ -15,6 +15,15 @@ static const char *task_str[] =
    "Not Task"
   };
 
+static const int task_name_lens[] =
+  {
+   sizeof (TASK_STR(COUNT)) - 1,
+   sizeof (TASK_STR(DIFFCOUNT)) - 1,
+   sizeof (TASK_STR(SETCOUNT)) - 1,
+   sizeof (TASK_STR(FRUITMAX)) - 1,
+   sizeof ("Not Task") - 1
+  };
+
 const char *task_get_str(Task task)
 {
   return task_str[task >= 0 && task < TASKMAX ? task : TASKMAX];
@@ -23,6 +32,12 @@ const char *task_get_str(Task task)
 struct Logic_s
 {
   arraylist *list;
+};
+
+struct chip_string
+{
+  char *s;
+  size_t len;
 };
 
 static int logic_get_fruit_count(Logic *const this, Fruit find);
@@ -51,26 +66,31 @@ void logic_destructor(Logic * const this)
   this->list = NULL;
 }
 
-char *logic_get_task(Logic * const this)
+static struct chip_string *logic_get_task_answers(Logic * const this)
 {
-  struct
-  {
-    char *s;
-    size_t len;
-  } task_answers[TASKMAX];
-  size_t answer_len = 0;
+  static struct chip_string answers[TASKMAX];
   for (Task task = 0; task < TASKMAX; task++)
     {
-      task_answers[task].s = logic_get_task_id(this, task);
-      if (task_answers[task].s == NULL)
+      answers[task].s = logic_get_task(this, task);
+      if (answers[task].s == NULL)
         {
           for (int i = 0; i < task; i++)
-            free(task_answers[i].s);
+            free(answers[i].s);
           return NULL;
         }
-      task_answers[task].len = strlen(task_answers[task].s);
-      answer_len += task_answers[task].len + 1;
+      answers[task].len = strlen(answers[task].s);
     }
+  return answers;
+}
+
+char *logic_get_task_raw(Logic * const this)
+{
+  struct chip_string *task_answers = logic_get_task_answers(this);
+  if (task_answers == NULL)
+    return NULL;
+  size_t answer_len = 0;
+  for (Task task = 0; task < TASKMAX; task++)
+    answer_len += task_name_lens[task] + 1 + task_answers[task].len + 1;
   char *answer = (char *) malloc(answer_len + 1);
   if (answer == NULL)
     return NULL;
@@ -78,6 +98,9 @@ char *logic_get_task(Logic * const this)
   *p = '\0';
   for (Task task = 0; task < TASKMAX; task++)
     {
+      memcpy(p, task_get_str(task), task_name_lens[task]);
+      p += task_name_lens[task];
+      *p++ = '=';
       memcpy(p, task_answers[task].s, task_answers[task].len);
       p += task_answers[task].len;
       *p++ = '\n';
@@ -88,27 +111,19 @@ char *logic_get_task(Logic * const this)
   return answer;
 }
 
-char *logic_get_task_id(Logic * const this, Task task)
+char *logic_get_task(Logic * const this, Task task)
 {
   char buf[32];
-  const char *p1 = task_get_str(task);
-  const char *p2 = buf;
-  size_t t1 = strlen(p1);
-  size_t t2 = 0;
+  const char *p = buf;
   switch (task)
     {
-    case COUNT: t2 = snprintf(buf, sizeof buf, "%d", logic_get_count(this)); break;
-    case DIFFCOUNT: t2 = snprintf(buf, sizeof buf, "%d", logic_get_diff_count(this)); break;
-    case SETCOUNT: t2 = snprintf(buf, sizeof buf, "%d", logic_get_set_count(this)); break;
-    case FRUITMAX: p2 = fruit_get_str(logic_get_fruit_max(this)); t2 = strlen(p2);  break;
-    default: t2 = snprintf(buf, sizeof buf, "%s", "unknown"); break;
+    case COUNT: snprintf(buf, sizeof buf, "%d", logic_get_count(this)); break;
+    case DIFFCOUNT: snprintf(buf, sizeof buf, "%d", logic_get_diff_count(this)); break;
+    case SETCOUNT: snprintf(buf, sizeof buf, "%d", logic_get_set_count(this)); break;
+    case FRUITMAX: p = fruit_get_str(logic_get_fruit_max(this)); break;
+    default: snprintf(buf, sizeof buf, "%s", "unknown"); break;
     }
-  size_t t = t1 + 1 + t2 + 1;
-  char *answer = (char *) malloc(t);
-  if (answer == NULL)
-    return NULL;
-  snprintf(answer, t, "%s=%s", p1, p2);
-  return answer;
+  return strdup(p);
 }
 
 int logic_get_count(Logic * const this)
