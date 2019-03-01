@@ -7,7 +7,7 @@
 typedef struct fruitreaderfile_vtable_s
 {
   void (**fvoid)();
-  arraylist * (**farraylist)();
+  ArrayList * (**farraylist)();
 } fruitreaderfile_vtable;
 
 struct fruitreaderfile_s
@@ -17,6 +17,6 @@ struct fruitreaderfile_s
 };
 
 void fruitreaderfile_destructor_vf(fruitreaderfile * const this);
-arraylist *fruitreaderfile_read_vf(fruitreaderfile * const this);
+ArrayList *fruitreaderfile_read_vf(fruitreaderfile * const this);
 
 #endif

@@ -16,7 +16,7 @@ typedef enum
   } Task;
 
 Logic *logic_new();
-void logic_constructor(Logic * const this, arraylist *list);
+void logic_constructor(Logic * const this, ArrayList *list);
 void logic_destructor(Logic * const this);
 char *logic_get_task_raw(Logic * const this);
 char *logic_get_task_xml(Logic * const this);

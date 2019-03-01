@@ -20,6 +20,6 @@ void fruitreader_destructor(fruitreader * const this);
  Считывает данные из потока
  \return сформированный список фруктов
  */
-arraylist *fruitreader_read(fruitreader * const this);
+ArrayList *fruitreader_read(fruitreader * const this);
 
 #endif

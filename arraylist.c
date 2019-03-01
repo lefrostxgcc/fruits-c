@@ -5,24 +5,24 @@
 
 enum { CAPACITY_MIN = 8, CAPACITY_COEFF = 2 };
 
-typedef struct arraylist_s
+struct arraylist_s
 {
   object **data;
   int size;
   int capacity;
-} arraylist;
+};
 
-arraylist *arraylist_new(void)
+ArrayList *arraylist_new(void)
 {
-  return (arraylist *) malloc(sizeof(arraylist));
+  return (ArrayList *) malloc(sizeof(ArrayList));
 }
 
-void arraylist_delete(arraylist *this)
+void arraylist_delete(ArrayList *this)
 {
   free(this);
 }
 
-static void arraylist_reallocate(arraylist * const this)
+static void arraylist_reallocate(ArrayList * const this)
 {
   int new_capacity = this->capacity != 0 ?
     this->capacity * CAPACITY_COEFF : CAPACITY_MIN;
@@ -30,13 +30,13 @@ static void arraylist_reallocate(arraylist * const this)
   this->capacity = new_capacity;
 }
 
-void arraylist_constructor(arraylist * const this)
+void arraylist_constructor(ArrayList * const this)
 {
   this->data = NULL;
   this->size = this->capacity = 0;
 }
 
-void arraylist_destructor(arraylist * const this)
+void arraylist_destructor(ArrayList * const this)
 {
   if (!this)
     return;
@@ -52,7 +52,7 @@ void arraylist_destructor(arraylist * const this)
   this->size = this->capacity = 0;
 }
 
-void arraylist_add(arraylist * const this, object *element)
+void arraylist_add(ArrayList * const this, object *element)
 {
   if (!this || !element)
     return;
@@ -62,24 +62,24 @@ void arraylist_add(arraylist * const this, object *element)
   this->size++;
 }
 
-int arraylist_size(arraylist * const this)
+int arraylist_size(ArrayList * const this)
 {
   return this ? this->size : 0;
 }
 
-int arraylist_capacity(arraylist * const this)
+int arraylist_capacity(ArrayList * const this)
 {
   return this ? this->capacity : 0;
 }
 
-object *arraylist_get(arraylist * const this, int index)
+object *arraylist_get(ArrayList * const this, int index)
 {
   if (!this || index < 0 || index >= this->size)
     return NULL;
   return this->data[index];
 }
 
-void arraylist_set(arraylist * const this, object *element, int index)
+void arraylist_set(ArrayList * const this, object *element, int index)
 {
   if (!this || !element || index < 0 || index >= this->size)
     return;

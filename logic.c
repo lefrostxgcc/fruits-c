@@ -32,7 +32,7 @@ const char *task_get_str(Task task)
 
 struct Logic_s
 {
-  arraylist *list;
+  ArrayList *list;
 };
 
 struct chip_string
@@ -72,7 +72,7 @@ void logic_delete(Logic *this)
   free(this);
 }
 
-void logic_constructor(Logic * const this, arraylist *list)
+void logic_constructor(Logic * const this, ArrayList *list)
 {
   if (!this)
     return;

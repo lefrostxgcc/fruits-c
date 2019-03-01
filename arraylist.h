@@ -3,15 +3,15 @@
 
 #include <object.h>
 
-typedef struct arraylist_s arraylist;
+typedef struct arraylist_s ArrayList;
 
-arraylist *arraylist_new(void);
-void arraylist_delete(arraylist *this);
-void arraylist_constructor(arraylist * const this);
-void arraylist_destructor(arraylist * const this);
-void arraylist_add(arraylist * const this, object *element);
-int arraylist_size(arraylist * const this);
-object *arraylist_get(arraylist * const this, int index);
-void arraylist_set(arraylist * const this, object *element, int index);
+ArrayList *arraylist_new(void);
+void arraylist_delete(ArrayList *this);
+void arraylist_constructor(ArrayList * const this);
+void arraylist_destructor(ArrayList * const this);
+void arraylist_add(ArrayList * const this, object *element);
+int arraylist_size(ArrayList * const this);
+object *arraylist_get(ArrayList * const this, int index);
+void arraylist_set(ArrayList * const this, object *element, int index);
 
 #endif

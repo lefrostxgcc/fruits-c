@@ -17,7 +17,7 @@ void (*fruitreader_void[])() =
    [FRUITREADER_DESTRUCTOR] = &fruitreader_destructor_vf,
   };
 
-arraylist *(*fruitreader_arraylist[])() =
+ArrayList *(*fruitreader_arraylist[])() =
   {
    [FRUITREADER_READ] = &fruitreader_read_vf,
   };
@@ -69,15 +69,15 @@ static char *read_line(char *buf, int size, FILE *stream)
  Считывает данные из потока
  \return сформированный список фруктов
  */
-arraylist *fruitreader_read(fruitreader * const this)
+ArrayList *fruitreader_read(fruitreader * const this)
 {
   return this->vt->farraylist[FRUITREADER_READ](this);
 }
 
-arraylist *fruitreader_read_vf(fruitreader * const this)
+ArrayList *fruitreader_read_vf(fruitreader * const this)
 {
   char buf[80];
-  arraylist *list = arraylist_new();
+  ArrayList *list = arraylist_new();
   arraylist_constructor(list);
   if (this->br == NULL)
     return list;

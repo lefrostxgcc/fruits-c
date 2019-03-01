@@ -7,7 +7,7 @@
 typedef struct fruitreaderstringarray_vtable_s
 {
   void (**fvoid)();
-  arraylist * (**farraylist)();
+  ArrayList * (**farraylist)();
 } fruitreaderstringarray_vtable;
 
 struct fruitreaderstringarray_s
@@ -17,7 +17,7 @@ struct fruitreaderstringarray_s
 };
 
 void fruitreaderstringarray_destructor_vf(fruitreaderstringarray * const this);
-arraylist *fruitreaderstringarray_read_vf(fruitreaderstringarray * const this);
+ArrayList *fruitreaderstringarray_read_vf(fruitreaderstringarray * const this);
 /*!
   Конвертация массива в строку
   \param array Массив из строк

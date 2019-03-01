@@ -72,6 +72,17 @@ int object_size(object * const this)
   return this->size;
 }
 
+int object_equal(const object * const a, const object * const b)
+{
+  if (a == b)
+    return 1;
+  if (!a || !b)
+    return 0;
+  if (a->size != b->size)
+    return 0;
+  return memcmp(a->data, b->data, a->size) == 0;
+}
+
 void object_copy(object * const this, object *element)
 {
   this->vt->fvoid[OBJECT_COPY](this, element);

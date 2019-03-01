@@ -8,7 +8,7 @@ static void (*fruitreaderstring_void[])() =
    [FRUITREADER_DESTRUCTOR] = &fruitreader_destructor_vf,
   };
 
-static arraylist *(*fruitreaderstring_arraylist[])() =
+static ArrayList *(*fruitreaderstring_arraylist[])() =
   {
    [FRUITREADER_READ] = &fruitreader_read_vf,
   };

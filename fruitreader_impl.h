@@ -9,7 +9,7 @@ enum {FRUITREADER_DESTRUCTOR, FRUITREADER_READ};
 typedef struct fruitreader_vtable_s
 {
   void (**fvoid)();
-  arraylist * (**farraylist)();
+  ArrayList * (**farraylist)();
 } fruitreader_vtable;
 
 struct fruitreader_s
@@ -19,6 +19,6 @@ struct fruitreader_s
 };
 
 void fruitreader_destructor_vf(fruitreader * const this);
-arraylist *fruitreader_read_vf(fruitreader * const this);
+ArrayList *fruitreader_read_vf(fruitreader * const this);
 
 #endif
