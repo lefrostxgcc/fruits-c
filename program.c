@@ -79,9 +79,15 @@ static void start(fruitreader *fr)
   arraylist *list = fruitreader_read(fr);
   Logic *logic = logic_new();
   logic_constructor(logic, list);
-  char *s = logic_get_task_raw(logic);
-  printf("%s\n", s ? s : "task error");
-  free(s);
+  char *raw = logic_get_task_raw(logic);
+  char *xml = logic_get_task_xml(logic);
+  char *json = logic_get_task_json(logic);
+  printf("%s\n", raw ? raw : "raw task error");
+  printf("%s\n", xml ? xml : "xml task error");
+  printf("%s\n", json ? json : "json task error");
+  free(raw);
+  free(xml);
+  free(json);
   logic_destructor(logic);
   logic_delete(logic);
   arraylist_destructor(list);

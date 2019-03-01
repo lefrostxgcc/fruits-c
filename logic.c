@@ -154,7 +154,37 @@ char *logic_get_task_xml(Logic * const this)
                       "</", task_get_str(task), ">\n", NULL
                       );
     }
-  p = chip_concat(p, "<", XML_ROOT_NAME, "/>", NULL);
+  p = chip_concat(p, "</", XML_ROOT_NAME, ">", NULL);
+  *p = '\0';
+  for (Task task = 0; task < TASKMAX; task++)
+    free(task_answers[task].s);
+  return answer;
+}
+
+char *logic_get_task_json(Logic * const this)
+{
+  struct chip_string *task_answers = logic_get_task_answers(this);
+  if (task_answers == NULL)
+    return NULL;
+  size_t answer_len = 3;
+  for (Task task = 0; task < TASKMAX; task++)
+    answer_len += task_name_lens[task] + task_answers[task].len + 12;
+  char *answer = (char *) malloc(answer_len + 1);
+  if (answer == NULL)
+    return NULL;
+  char *p = answer;
+  *p = '\0';
+  p = chip_concat(p, "{\n", NULL);
+  for (Task task = 0; task < TASKMAX; task++)
+    {
+      p = chip_concat(p,
+                      "    \"", task_get_str(task), "\": \"",
+                      task_answers[task].s,
+                      "\",\n", NULL
+                      );
+    }
+  p -= 2;
+  p = chip_concat(p, "\n}", NULL);
   *p = '\0';
   for (Task task = 0; task < TASKMAX; task++)
     free(task_answers[task].s);
