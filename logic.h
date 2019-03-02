@@ -1,7 +1,6 @@
 #ifndef LOGIC_H
 #define LOGIC_H
 
-#include <convertable.h>
 #include <chip_string.h>
 #include <fruit.h>
 #include <arraylist.h>
@@ -30,7 +29,6 @@ int logic_get_count(Logic * const this);
 int logic_get_diff_count(Logic * const this);
 int logic_get_set_count(Logic * const this);
 Fruit logic_get_fruit_max(Logic * const this);
-String *logic_convert(Logic * const this, const HashMap *map);
 void logic_delete(Logic *this);
 
 #endif

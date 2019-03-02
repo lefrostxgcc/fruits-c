@@ -12,6 +12,10 @@
 #include <arraylist.h>
 #include <fruit.h>
 #include <logic.h>
+#include <convertable.h>
+#include <convertraw.h>
+#include <convertxml.h>
+#include <convertjson.h>
 #include <fruitreader.h>
 #include <fruitreaderfile.h>
 #include <fruitreaderscan.h>
@@ -80,10 +84,34 @@ static void start(fruitreader *fr)
   Logic *logic = logic_new();
   logic_constructor(logic, list);
   HashMap *map = logic_get_task(logic);
-  String *answer = logic_convert(logic, map);
-  printf("%s\n", answer ? string_data(answer) : "task error");
-  string_destructor(answer);
-  string_delete(answer);
+  Convertable *convert = NULL;
+  ConvertRAW *convertRAW = convertraw_new();
+  convertraw_constructor(convertRAW);
+  ConvertXML *convertXML = convertxml_new();
+  convertxml_constructor(convertXML);
+  ConvertJSON *convertJSON = convertjson_new();
+  convertjson_constructor(convertJSON);
+  convert = (Convertable *) convertRAW;
+  String *answerRAW = convertable_convert(convert, map);
+  convert = (Convertable *) convertXML;
+  String *answerXML = convertable_convert(convert, map);
+  convert = (Convertable *) convertJSON;
+  String *answerJSON = convertable_convert(convert, map);
+  printf("%s\n", answerRAW ? string_data(answerRAW) : "task error");
+  printf("%s\n", answerXML ? string_data(answerXML) : "task error");
+  printf("%s\n", answerJSON ? string_data(answerJSON) : "task error");
+  string_destructor(answerRAW);
+  string_delete(answerRAW);
+  string_destructor(answerXML);
+  string_delete(answerXML);
+  string_destructor(answerJSON);
+  string_delete(answerJSON);
+  convertable_destructor((Convertable *) convertRAW);
+  convertable_delete((Convertable *) convertRAW);
+  convertable_destructor((Convertable *) convertXML);
+  convertable_delete((Convertable *) convertXML);
+  convertable_destructor((Convertable *) convertJSON);
+  convertable_delete((Convertable *) convertJSON);
   hashmap_destructor(map);
   hashmap_delete(map);
   logic_destructor(logic);

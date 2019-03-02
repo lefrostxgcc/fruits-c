@@ -14,12 +14,6 @@ typedef struct logic_vtbl_s
   String * (**fstringp)();
 } logic_vtbl;
 
-struct Logic_s
-{
-  logic_vtbl *vptr;
-  ArrayList *list;
-};
-
 String *logic_convert_vf(Convertable * const this, const HashMap *map);
 void logic_destructor_vf(Convertable * const this);
 
