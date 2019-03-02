@@ -9,6 +9,7 @@ void string_constructor(String * const this);
 void string_destructor(String * const this);
 String *string_copy(String * const this);
 String *string_new_concat(const char *s, ...);
+const char *string_data(const String *this);
 void string_concat(String * const this, const char *s, ...);
 void string_append(String * const this, const char *s);
 int string_size(String * const this);

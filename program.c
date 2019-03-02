@@ -79,35 +79,15 @@ static void start(fruitreader *fr)
   ArrayList *list = fruitreader_read(fr);
   Logic *logic = logic_new();
   logic_constructor(logic, list);
-  char *raw = logic_get_task_raw(logic);
-  char *xml = logic_get_task_xml(logic);
-  char *json = logic_get_task_json(logic);
-  printf("%s\n", raw ? raw : "raw task error");
-  printf("%s\n", xml ? xml : "xml task error");
-  printf("%s\n", json ? json : "json task error");
-  free(raw);
-  free(xml);
-  free(json);
+  HashMap *map = logic_get_task(logic);
+  String *answer = logic_convert(logic, map);
+  printf("%s\n", answer ? string_data(answer) : "task error");
+  string_destructor(answer);
+  string_delete(answer);
+  hashmap_destructor(map);
+  hashmap_delete(map);
   logic_destructor(logic);
   logic_delete(logic);
   arraylist_destructor(list);
   arraylist_delete(list);
-}
-
-static char *chip_concat(const char *s1, const char *s2)
-{
-  if (!s1 && !s2)
-    return NULL;
-  size_t s1_len = s1 ? strlen(s1) : 0;
-  size_t s2_len = s2 ? strlen(s2) : 0;
-  size_t s_len = s1_len + s2_len;
-  char *s = (char *) malloc(s_len + 1);
-  if (!s)
-    return NULL;
-  if (s1)
-    memcpy(s, s1, s1_len);
-  if (s2)
-    memcpy(s + s1_len, s2, s2_len);
-  s[s_len] = '\0';
-  return s;
 }

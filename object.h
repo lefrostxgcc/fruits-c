@@ -4,7 +4,7 @@
 typedef struct object_s object;
 
 object *object_new(void);
-void object_free(object **this);
+void object_delete(object *this);
 void object_constructor(object * const this, void *data, int size);
 void *object_data(object * const this);
 int object_size(object * const this);

@@ -10,12 +10,6 @@ void object_destructor_vf(object * const this)
   this->object_size = 0;
 }
 
-void object_free_vf(object **this)
-{
-  free(*this);
-  *this = NULL;
-}
-
 void object_copy_vf(object * const this, object *element)
 {
   memcpy(this->data, element->data, element->size);
@@ -26,7 +20,6 @@ void object_copy_vf(object * const this, object *element)
 void (*fvoidfunc[])() =
   {
    [OBJECT_DESTRUCTOR] = &object_destructor_vf,
-   [OBJECT_FREE] = &object_free_vf,
    [OBJECT_COPY] = &object_copy_vf
   };
 
@@ -37,9 +30,9 @@ object *object_new(void)
   return (object *) malloc(sizeof(object));
 }
 
-void object_free(object **this)
+void object_delete(object *this)
 {
-  (*this)->vt->fvoid[OBJECT_FREE](this);
+  free(this);
 }
 
 void object_constructor(object * const this, void *data, int size)

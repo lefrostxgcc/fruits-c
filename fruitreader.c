@@ -93,7 +93,7 @@ ArrayList *fruitreader_read_vf(fruitreader * const this)
       object_constructor(object_fruit, &fruit, sizeof fruit);
       arraylist_add(list, object_fruit);
       object_destructor(object_fruit);
-      object_free(&object_fruit);
+      object_delete(object_fruit);
     }
   return list;
 }

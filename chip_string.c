@@ -60,8 +60,9 @@ String *string_copy(String * const this)
 
 void string_concat(String * const this, const char *s, ...)
 {
-  if (!this)
+  if (!this || !s)
     return;
+  string_append(this, s);
   va_list ap;
   va_start(ap, s);
   const char *p = NULL;
@@ -73,6 +74,10 @@ void string_concat(String * const this, const char *s, ...)
 String *string_new_concat(const char *s, ...)
 {
   String *new_s = string_new();
+  string_constructor(new_s);
+  if (!s)
+    return new_s;
+  string_append(new_s, s);
   va_list ap;
   va_start(ap, s);
   const char *p = NULL;
@@ -92,7 +97,15 @@ void string_append(String * const this, const char *s)
   if (new_len >= this->capacity)
     string_reallocate(this, new_len);
   memcpy(this->data + old_len, s, s_len);
+  this->size = new_len;
   this->data[new_len] = '\0';
+}
+
+const char *string_data(const String *this)
+{
+  if (!this)
+    return NULL;
+  return this->data;
 }
 
 int string_size(String * const this)

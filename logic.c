@@ -1,9 +1,11 @@
 #include <logic_impl.h>
 #include <object.h>
+#include <object_cstr.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <chip_string.h>
 
 #define TASK_STR(TASK) #TASK
 
@@ -30,7 +32,7 @@ static void (*logic_void[])() =
    [LOGIC_DESTRUCTOR] = &logic_destructor_vf,
   };
 
-static char *(*logic_charp[])() =
+static String *(*logic_stringp[])() =
   {
    [LOGIC_CONVERT] = &logic_convert_vf,
   };
@@ -38,37 +40,12 @@ static char *(*logic_charp[])() =
 static logic_vtbl logic_vt =
   {
    .fvoid = logic_void,
-   .fcharp = logic_charp
+   .fstringp = logic_stringp
   };
 
 const char *task_get_str(Task task)
 {
   return task_str[task >= 0 && task < TASKMAX ? task : TASKMAX];
-}
-
-struct chip_string
-{
-  char *s;
-  size_t len;
-};
-
-static char *chip_concat(char *s, ...)
-{
-  if (s == NULL)
-    return NULL;
-  va_list ap;
-  char *s_concat = s;
-  const char *p = NULL;
-  va_start(ap, s);
-  while ((p = va_arg(ap, const char *)) != NULL)
-    {
-      size_t p_len = strlen(p);
-      memcpy(s_concat, p, p_len);
-      s_concat += p_len;
-    }
-  *s_concat = '\0';
-  va_end(ap);
-  return s_concat;
 }
 
 static int logic_get_fruit_count(Logic *const this, Fruit find);
@@ -91,14 +68,47 @@ void logic_constructor(Logic * const this, ArrayList *list)
   this->list = list;
 }
 
-char *logic_convert_vf(Convertable * const this, const HashMap *map)
+String *logic_convert_vf(Convertable * const this, const HashMap *map)
 {
   return logic_convert((Logic *) this, map);
 }
 
-char *logic_convert(Logic * const this, const HashMap *map)
+String *logic_convert(Logic * const this, const HashMap *map)
 {
-  return strdup("");
+  String *text = string_new();
+  string_constructor(text);
+  int map_size = hashmap_get_size(map);
+  Entry **entry_set = hashmap_get_entry_set((HashMap *) map);
+  for (int i = 0; i < map_size; i++)
+    {
+      Entry *pair = entry_set[i];
+      const char *key = (const char *) object_data(entry_get_key(pair));
+      const char *value = (const char *) object_data(entry_get_value(pair));
+      string_concat(text, key, "=", value, "\n", NULL);
+    }
+  return text;
+}
+
+HashMap *logic_get_task(Logic * const this)
+{
+  HashMap *map = hashmap_new();
+  hashmap_constructor(map);
+  for (Task task = 0; task < TASKMAX; task++)
+    {
+      object_cstr *key = object_cstr_new();
+      object_cstr *value = object_cstr_new();
+      String *s = logic_get_task_task(this, task);
+      object_cstr_constructor(key, task_get_str(task));
+      object_cstr_constructor(value, string_data(s));
+      hashmap_put(map, (object *) key, (object *) value);
+      string_destructor(s);
+      object_destructor((object *) key);
+      object_destructor((object *) value);
+      string_delete(s);
+      object_delete((object *) key);
+      object_delete((object *) value);
+    }
+  return map;
 }
 
 void logic_destructor_vf(Convertable * const this)
@@ -113,112 +123,99 @@ void logic_destructor(Logic * const this)
   this->list = NULL;
 }
 
-static struct chip_string *logic_get_task_answers(Logic * const this)
+static String **logic_get_task_answers(Logic * const this)
 {
-  static struct chip_string answers[TASKMAX];
+  String **answers = (String **) malloc(sizeof (String *) * TASKMAX);
   for (Task task = 0; task < TASKMAX; task++)
-    {
-      answers[task].s = logic_get_task(this, task);
-      if (answers[task].s == NULL)
-        {
-          for (int i = 0; i < task; i++)
-            free(answers[i].s);
-          return NULL;
-        }
-      answers[task].len = strlen(answers[task].s);
-    }
+      answers[task] = logic_get_task_task(this, task);
   return answers;
 }
 
-char *logic_get_task_raw(Logic * const this)
+String *logic_get_task_raw(Logic * const this)
 {
-  struct chip_string *task_answers = logic_get_task_answers(this);
+  String **task_answers = logic_get_task_answers(this);
   if (task_answers == NULL)
     return NULL;
-  size_t answer_len = 0;
-  for (Task task = 0; task < TASKMAX; task++)
-    answer_len += task_name_lens[task] + 1 + task_answers[task].len + 1;
-  char *answer = (char *) malloc(answer_len + 1);
+  String *answer = string_new();
   if (answer == NULL)
     return NULL;
-  char *p = answer;
-  *p = '\0';
+  string_constructor(answer);
   for (Task task = 0; task < TASKMAX; task++)
     {
-      memcpy(p, task_get_str(task), task_name_lens[task]);
-      p += task_name_lens[task];
-      *p++ = '=';
-      memcpy(p, task_answers[task].s, task_answers[task].len);
-      p += task_answers[task].len;
-      *p++ = '\n';
+      string_concat(answer,
+                    task_get_str(task),
+                    "=",
+                    string_data(task_answers[task]),
+                    "\n",
+                    NULL);
     }
-  *p = '\0';
   for (Task task = 0; task < TASKMAX; task++)
-    free(task_answers[task].s);
+    {
+      string_destructor(task_answers[task]);
+      string_delete(task_answers[task]);
+    }
+  free(task_answers);
   return answer;
 }
 
-char *logic_get_task_xml(Logic * const this)
+String *logic_get_task_xml(Logic * const this)
 {
-  struct chip_string *task_answers = logic_get_task_answers(this);
+  String **task_answers = logic_get_task_answers(this);
   if (task_answers == NULL)
     return NULL;
-#define XML_HEADER "<?xml version=\"1.0\">\n"
-#define XML_ROOT_NAME "TASKS"
-  size_t answer_len = sizeof (XML_HEADER) + 2 * sizeof(XML_ROOT_NAME) + 6;
-  for (Task task = 0; task < TASKMAX; task++)
-    answer_len += task_name_lens[task] * 2 + task_answers[task].len + 10;
-  char *answer = (char *) malloc(answer_len + 1);
+  String *answer = string_new();
   if (answer == NULL)
     return NULL;
-  char *p = answer;
-  *p = '\0';
-  p = chip_concat(p, XML_HEADER, "<", XML_ROOT_NAME, ">\n", NULL);
+  string_constructor(answer);
+  string_concat(answer, "<?xml version=\"1.0\">\n<TASKS>\n", NULL);
   for (Task task = 0; task < TASKMAX; task++)
     {
-      p = chip_concat(p, "    <", task_get_str(task), ">",
-                      task_answers[task].s,
-                      "</", task_get_str(task), ">\n", NULL
-                      );
+      string_concat(answer,
+                    "    <", task_get_str(task), ">",
+                    string_data(task_answers[task]),
+                    "</", task_get_str(task), ">\n",
+                    NULL);
     }
-  p = chip_concat(p, "</", XML_ROOT_NAME, ">", NULL);
-  *p = '\0';
+  string_concat(answer, "</TASKS>", NULL);
   for (Task task = 0; task < TASKMAX; task++)
-    free(task_answers[task].s);
+    {
+      string_destructor(task_answers[task]);
+      string_delete(task_answers[task]);
+    }
+  free(task_answers);
   return answer;
 }
 
-char *logic_get_task_json(Logic * const this)
+String *logic_get_task_json(Logic * const this)
 {
-  struct chip_string *task_answers = logic_get_task_answers(this);
+  String **task_answers = logic_get_task_answers(this);
   if (task_answers == NULL)
     return NULL;
-  size_t answer_len = 3;
-  for (Task task = 0; task < TASKMAX; task++)
-    answer_len += task_name_lens[task] + task_answers[task].len + 12;
-  char *answer = (char *) malloc(answer_len + 1);
+  String *answer = string_new();
   if (answer == NULL)
     return NULL;
-  char *p = answer;
-  *p = '\0';
-  p = chip_concat(p, "{\n", NULL);
+  string_constructor(answer);
+  string_concat(answer, "{\n", NULL);
   for (Task task = 0; task < TASKMAX; task++)
     {
-      p = chip_concat(p,
-                      "    \"", task_get_str(task), "\": \"",
-                      task_answers[task].s,
-                      "\",\n", NULL
-                      );
+       string_concat(answer,
+                    "    \"", task_get_str(task), "\": \"",
+                    string_data(task_answers[task]),
+                    "\",\n",
+                    NULL);
     }
-  p -= 2;
-  p = chip_concat(p, "\n}", NULL);
-  *p = '\0';
+  string_set(answer, string_size(answer) - 2, '\n');
+  string_set(answer, string_size(answer) - 1, '}');
   for (Task task = 0; task < TASKMAX; task++)
-    free(task_answers[task].s);
+    {
+      string_destructor(task_answers[task]);
+      string_delete(task_answers[task]);
+    }
+  free(task_answers);
   return answer;
 }
 
-char *logic_get_task(Logic * const this, Task task)
+String *logic_get_task_task(Logic * const this, Task task)
 {
   char buf[32];
   const char *p = buf;
@@ -230,7 +227,7 @@ char *logic_get_task(Logic * const this, Task task)
     case FRUITMAX: p = fruit_get_str(logic_get_fruit_max(this)); break;
     default: snprintf(buf, sizeof buf, "%s", "unknown"); break;
     }
-  return strdup(p);
+  return string_new_concat(p, NULL);
 }
 
 int logic_get_count(Logic * const this)

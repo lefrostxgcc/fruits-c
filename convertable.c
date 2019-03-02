@@ -6,9 +6,9 @@ void convertable_delete(Convertable *p)
   free((void *) p);
 }
 
-char *convertable_convert(Convertable * const this, const HashMap *map)
+String *convertable_convert(Convertable * const this, const HashMap *map)
 {
-  return this->vptr->fcharp[CONVERTABLE_CONVERT](this, map);
+  return this->vptr->fstringp[CONVERTABLE_CONVERT](this, map);
 }
 
 void convertable_destructor(Convertable * const this)

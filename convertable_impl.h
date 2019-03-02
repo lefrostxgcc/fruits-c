@@ -4,12 +4,12 @@
 #include <convertable.h>
 
 enum fvoid{ CONVERTABLE_DESTRUCTOR };
-enum fcharp{ CONVERTABLE_CONVERT };
+enum fstringp{ CONVERTABLE_CONVERT };
 
 typedef struct convertable_vtbl_s
 {
   void (**fvoid)();
-  char* (**fcharp)();
+  String * (**fstringp)();
 } convertable_vtbl;
 
 struct convertable_s

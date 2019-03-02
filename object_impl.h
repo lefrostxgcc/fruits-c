@@ -3,7 +3,7 @@
 
 #include <object.h>
 
-enum {OBJECT_DESTRUCTOR, OBJECT_FREE, OBJECT_COPY};
+enum {OBJECT_DESTRUCTOR, OBJECT_COPY};
 
 typedef struct vtable_s
 {
@@ -19,7 +19,6 @@ struct object_s
 };
 
 void object_destructor_vf(object * const this);
-void object_free_vf(object ** const this);
 void object_copy_vf(object * const this, object *element);
 extern vtable object_vt;
 
