@@ -12,6 +12,7 @@
 #include <arraylist.h>
 #include <fruit.h>
 #include <logic.h>
+#include <object_cstr.h>
 #include <convertable.h>
 #include <convertraw.h>
 #include <convertxml.h>
@@ -25,6 +26,8 @@ static void start(fruitreader *fr, Convertable *co);
 static Convertable *parse_args_convert(int argc, char *argv[]);
 static fruitreader *parse_args_freader(int argc, char *argv[]);
 static void show_manual(void);
+static void parse_args(int argc, char *argv[]);
+static void create(ArrayList *params);
 
 /*!
   Точка входа - запуск программы.
@@ -40,6 +43,32 @@ int main(int argc, char *argv[])
   fruitreader_delete(fr);
   convertable_destructor(co);
   convertable_delete(co);
+}
+
+static void parse_args(int argc, char *argv[])
+{
+  ArrayList *params = arraylist_new();
+  arraylist_constructor(params);
+  for (int i = 1; i < argc; i++)
+    {
+      if (argv[i][0] == '-')
+        {
+          create(params);
+          arraylist_destructor(params);
+          arraylist_delete(params);
+          params = arraylist_new();
+          arraylist_constructor(params);
+        }
+      object_cstr *object_arg = object_cstr_new();
+      object_cstr_constructor(object_arg, argv[i]);
+      arraylist_add(params, (object *) object_arg);
+      object_destructor((object *) object_arg);
+      object_delete((object *) object_arg);
+    }
+}
+
+static void create(ArrayList *params)
+{
 }
 
 static Convertable *parse_args_convert(int argc, char *argv[])
