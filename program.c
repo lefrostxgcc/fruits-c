@@ -21,25 +21,68 @@
 #include <fruitreaderscan.h>
 #include <fruitreaderstringarray.h>
 
-static void start(fruitreader *fr);
-static fruitreader *parse_args(int argc, char *argv[]);
+static void start(fruitreader *fr, Convertable *co);
+static Convertable *parse_args_convert(int argc, char *argv[]);
+static fruitreader *parse_args_freader(int argc, char *argv[]);
 static void show_manual(void);
-static char *chip_concat(const char *s1, const char *s2);
 
 /*!
   Точка входа - запуск программы.
 */
 int main(int argc, char *argv[])
 {
-  fruitreader *fr = parse_args(argc, argv);
+  Convertable *co = parse_args_convert(argc, argv);
+  fruitreader *fr = parse_args_freader(argc, argv);
   if (fr == NULL)
     return 1;
-  start(fr);
+  start(fr, co);
   fruitreader_destructor(fr);
   fruitreader_delete(fr);
+  convertable_destructor(co);
+  convertable_delete(co);
 }
 
-static fruitreader *parse_args(int argc, char *argv[])
+static Convertable *parse_args_convert(int argc, char *argv[])
+{
+  ConvertRAW *convertRAW = convertraw_new();
+  convertraw_constructor(convertRAW);
+  return (Convertable *) convertRAW;
+}
+
+/**
+   Решение основной задачи
+   \param[in] fr - Выбранный класс для считывания начальных данных
+*/
+static void start(fruitreader *fr, Convertable *co)
+{
+  ArrayList *list = fruitreader_read(fr);
+  Logic *logic = logic_new();
+  logic_constructor(logic, list);
+  HashMap *map = logic_get_task(logic);
+  String *answer = convertable_convert(co, map);
+  printf("%s\n", answer ? string_data(answer) : "task error");
+  string_destructor(answer);
+  string_delete(answer);
+  hashmap_destructor(map);
+  hashmap_delete(map);
+  logic_destructor(logic);
+  logic_delete(logic);
+  arraylist_destructor(list);
+  arraylist_delete(list);
+}
+
+static void show_manual(void)
+{
+  printf("Program: error, no options specified.\n");
+  printf("Usage: ./program [-format json|xml|raw] "
+         "[-file filename]|[-scan]|[-data data]\n");
+  printf(" -format\t\tUse specified format, default raw\n");
+  printf(" -file filename\tLoad Fruits from text file\n");
+  printf(" -scan \t\t\tLoad Fruits from Standard input\n");
+  printf(" -data FRUIT1..\tLoad list of fruits\n");
+}
+
+static fruitreader *parse_args_freader(int argc, char *argv[])
 {
   fruitreader *fr = NULL;
   if (argc == 3 && strcmp(argv[1], "-file") == 0)
@@ -63,59 +106,4 @@ static fruitreader *parse_args(int argc, char *argv[])
   else
     show_manual();
   return fr;
-}
-
-static void show_manual(void)
-{
-  printf("Program: error, no options specified.\n");
-  printf("Usage: ./program, [options] [data]\n");
-  printf(" -file filename\tLoad Fruits from text file\n");
-  printf(" -scan \t\t\tLoad Fruits from Standard input\n");
-  printf(" -data FRUIT1\tLoad one fruit\n");
-}
-
-/**
-   Решение основной задачи
-   \param[in] fr - Выбранный класс для считывания начальных данных
-*/
-static void start(fruitreader *fr)
-{
-  ArrayList *list = fruitreader_read(fr);
-  Logic *logic = logic_new();
-  logic_constructor(logic, list);
-  HashMap *map = logic_get_task(logic);
-  Convertable *convert = NULL;
-  ConvertRAW *convertRAW = convertraw_new();
-  convertraw_constructor(convertRAW);
-  ConvertXML *convertXML = convertxml_new();
-  convertxml_constructor(convertXML);
-  ConvertJSON *convertJSON = convertjson_new();
-  convertjson_constructor(convertJSON);
-  convert = (Convertable *) convertRAW;
-  String *answerRAW = convertable_convert(convert, map);
-  convert = (Convertable *) convertXML;
-  String *answerXML = convertable_convert(convert, map);
-  convert = (Convertable *) convertJSON;
-  String *answerJSON = convertable_convert(convert, map);
-  printf("%s\n", answerRAW ? string_data(answerRAW) : "task error");
-  printf("%s\n", answerXML ? string_data(answerXML) : "task error");
-  printf("%s\n", answerJSON ? string_data(answerJSON) : "task error");
-  string_destructor(answerRAW);
-  string_delete(answerRAW);
-  string_destructor(answerXML);
-  string_delete(answerXML);
-  string_destructor(answerJSON);
-  string_delete(answerJSON);
-  convertable_destructor((Convertable *) convertRAW);
-  convertable_delete((Convertable *) convertRAW);
-  convertable_destructor((Convertable *) convertXML);
-  convertable_delete((Convertable *) convertXML);
-  convertable_destructor((Convertable *) convertJSON);
-  convertable_delete((Convertable *) convertJSON);
-  hashmap_destructor(map);
-  hashmap_delete(map);
-  logic_destructor(logic);
-  logic_delete(logic);
-  arraylist_destructor(list);
-  arraylist_delete(list);
 }
