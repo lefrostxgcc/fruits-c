@@ -2,6 +2,7 @@
 #define FRUITREADERSTRINGARRAY_H
 
 #include <fruitreader.h>
+#include <arraylist.h>
 
 /*!
   Создание начальных данных из массива строк
@@ -18,6 +19,8 @@ fruitreaderstringarray *fruitreaderstringarray_new(void);
 */
 void fruitreaderstringarray_constructor(fruitreaderstringarray * const this,
                                         char *array[], int size);
+void fruitreaderstringarray_constructor_list(fruitreaderstringarray * const this,
+                                             ArrayList *list);
 void fruitreaderstringarray_destructor(fruitreaderstringarray * const this);
 
 #endif

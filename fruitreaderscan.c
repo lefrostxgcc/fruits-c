@@ -4,7 +4,7 @@
 
 static void (*fruitreaderscan_void[])() =
   {
-   [FRUITREADER_DESTRUCTOR] = &fruitreader_destructor_vf,
+   [FRUITREADER_DESTRUCTOR] = &fruitreaderscan_destructor_vf,
   };
 
 static ArrayList *(*fruitreaderscan_arraylist[])() =
@@ -28,4 +28,14 @@ void fruitreaderscan_constructor(fruitreaderscan * const this)
   fruitreader_constructor((fruitreader *) this);
   this->vt = &fruitreaderscan_vt;
   this->br = stdin; 
+}
+
+void fruitreaderscan_destructor(fruitreaderscan * const this)
+{
+}
+
+
+void fruitreaderscan_destructor_vf(fruitreader * const this)
+{
+  fruitreaderscan_destructor((fruitreaderscan *) this);
 }

@@ -87,3 +87,20 @@ void arraylist_set(ArrayList * const this, object *element, int index)
   free(this->data[index]);
   object_copy(this->data[index], element);
 }
+
+ArrayList *arraylist_sublist(ArrayList * const this, int start, int end)
+{
+  ArrayList *list = arraylist_new();
+  arraylist_constructor(list);
+  int this_size = arraylist_size(this);
+  if (start < 0 || end < 0 || start >= end || start >= this_size)
+    return list;
+  if (end > this_size)
+    end = this_size;
+  for (int i = start; i < end; i++)
+    {
+      object *elem = arraylist_get(this, i);
+      arraylist_add(list, elem);
+    }
+  return list;
+}

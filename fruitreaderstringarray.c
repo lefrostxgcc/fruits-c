@@ -33,6 +33,21 @@ void fruitreaderstringarray_constructor(fruitreaderstringarray * const this,
   free(s);
 }
 
+void fruitreaderstringarray_constructor_list(fruitreaderstringarray * const this,
+                                             ArrayList *list)
+{
+  char **array = NULL;
+  int size = arraylist_size(list);
+  if (size > 0)
+    {
+      array = (char **) malloc(size * sizeof (char *));
+      for (int i = 0; i < size; i++)
+        array[i] = (char *) object_data(arraylist_get(list, i));
+    }
+  fruitreaderstringarray_constructor(this, array, size);
+  free(array);
+}
+
 char *array_to_string(char *array[], int size)
 {
   char *items = NULL;
@@ -40,7 +55,7 @@ char *array_to_string(char *array[], int size)
   for (int i = 0; i < size; i++)
     items_len += strlen(array[i]) + 1;
   items_len += 1;
-  items = (char *) malloc(items_len + 1);
+  items = (char *) malloc(items_len + 2);
   if (items == NULL)
     return NULL;
   *items = '\0';

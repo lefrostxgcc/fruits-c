@@ -13,5 +13,6 @@ void arraylist_add(ArrayList * const this, object *element);
 int arraylist_size(ArrayList * const this);
 object *arraylist_get(ArrayList * const this, int index);
 void arraylist_set(ArrayList * const this, object *element, int index);
+ArrayList *arraylist_sublist(ArrayList * const this, int start, int end);
 
 #endif

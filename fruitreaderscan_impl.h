@@ -16,7 +16,8 @@ struct fruitreaderscan_s
   FILE *br;
 };
 
-void fruitreaderscan_destructor_vf(fruitreaderscan * const this);
-ArrayList *fruitreaderscan_read_vf(fruitreaderscan * const this);
+void fruitreaderscan_destructor(fruitreaderscan * const this);
+void fruitreaderscan_destructor_vf(fruitreader * const this);
+ArrayList *fruitreaderscan_read_vf(fruitreader * const this);
 
 #endif
