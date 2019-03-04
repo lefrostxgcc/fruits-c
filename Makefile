@@ -1,5 +1,7 @@
 INCLUDE_DIRS := .
-CPPFLAGS += $(addprefix -I ,$(INCLUDE_DIRS))
+CFLAGS += -g -O0
+CC := gcc
+override CPPFLAGS += $(addprefix -I ,$(INCLUDE_DIRS))
 HEADERS := $(wildcard *.h)
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
@@ -12,7 +14,7 @@ vpath %.h $(INCLUDE_DIRS)
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LIBS)
 
 etags:
 	etags *.[ch]
