@@ -18,15 +18,15 @@ static fruitreaderfile_vtable fruitreaderfile_vt =
    .farraylist = fruitreaderfile_arraylist
   };
 
-fruitreaderfile *fruitreaderfile_new(void)
+FruitReaderFile *fruitreaderfile_new(void)
 {
-  return (fruitreaderfile *) malloc(sizeof(fruitreaderfile));
+  return (FruitReaderFile *) malloc(sizeof(FruitReaderFile));
 }
 
-void fruitreaderfile_constructor(fruitreaderfile * const this,
+void fruitreaderfile_constructor(FruitReaderFile * const this,
                                  const char *filename)
 {
-  fruitreader_constructor((fruitreader *) this);
+  fruitreader_constructor((FruitReader *) this);
   this->vt = &fruitreaderfile_vt;
   this->br = fopen(filename, "r"); 
 }

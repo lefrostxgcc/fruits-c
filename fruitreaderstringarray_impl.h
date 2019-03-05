@@ -16,8 +16,8 @@ struct fruitreaderstringarray_s
   FILE *br;
 };
 
-void fruitreaderstringarray_destructor_vf(fruitreaderstringarray * const this);
-ArrayList *fruitreaderstringarray_read_vf(fruitreaderstringarray * const this);
+void fruitreaderstringarray_destructor_vf(FruitReader * const this);
+ArrayList *fruitreaderstringarray_read_vf(FruitReader * const this);
 /*!
   Конвертация массива в строку
   \param array Массив из строк

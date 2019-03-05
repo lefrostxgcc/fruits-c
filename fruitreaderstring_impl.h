@@ -16,7 +16,4 @@ struct fruitreaderstring_s
   FILE *br;
 };
 
-void fruitreaderstring_destructor_vf(fruitreaderstring * const this);
-ArrayList *fruitreaderstring_read_vf(fruitreaderstring * const this);
-
 #endif

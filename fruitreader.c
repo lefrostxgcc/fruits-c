@@ -28,29 +28,29 @@ fruitreader_vtable fruitreader_vt =
    .farraylist = fruitreader_arraylist
   };
 
-fruitreader *fruitreader_new(void)
+FruitReader *fruitreader_new(void)
 {
-  return (fruitreader *) malloc(sizeof(fruitreader));
+  return (FruitReader *) malloc(sizeof(FruitReader));
 }
 
-void fruitreader_delete(fruitreader *this)
+void fruitreader_delete(FruitReader *this)
 {
   free((void *) this);
 }
 
-void fruitreader_constructor(fruitreader * const this)
+void fruitreader_constructor(FruitReader * const this)
 {
   this->vt = &fruitreader_vt;
   this->br = NULL;
 }
 
-void fruitreader_destructor(fruitreader * const this)
+void fruitreader_destructor(FruitReader * const this)
 {
   if (this)
     this->vt->fvoid[FRUITREADER_DESTRUCTOR](this);
 }
 
-void fruitreader_destructor_vf(fruitreader * const this)
+void fruitreader_destructor_vf(FruitReader * const this)
 {
   if (this->br)
     fclose(this->br);
@@ -70,12 +70,12 @@ static char *read_line(char *buf, int size, FILE *stream)
  Считывает данные из потока
  \return сформированный список фруктов
  */
-ArrayList *fruitreader_read(fruitreader * const this)
+ArrayList *fruitreader_read(FruitReader * const this)
 {
   return this->vt->farraylist[FRUITREADER_READ](this);
 }
 
-ArrayList *fruitreader_read_vf(fruitreader * const this)
+ArrayList *fruitreader_read_vf(FruitReader * const this)
 {
   char buf[80];
   ArrayList *list = arraylist_new();

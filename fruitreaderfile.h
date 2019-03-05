@@ -8,15 +8,15 @@
  \author Chip
  */
 
-typedef struct fruitreaderfile_s fruitreaderfile;
+typedef struct fruitreaderfile_s FruitReaderFile;
 
-fruitreaderfile *fruitreaderfile_new(void);
+FruitReaderFile *fruitreaderfile_new(void);
 /*!
   Подготовка к считыванию из файла.
   \param filename Имя файла
 */
-void fruitreaderfile_constructor(fruitreaderfile * const this,
+void fruitreaderfile_constructor(FruitReaderFile * const this,
                                  const char *filename);
-void fruitreaderfile_destructor(fruitreaderfile * const this);
+void fruitreaderfile_destructor(FruitReaderFile * const this);
 
 #endif

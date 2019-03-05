@@ -9,13 +9,13 @@
   \author Chip
 */
 
-typedef struct fruitreaderscan_s fruitreaderscan;
+typedef struct fruitreaderscan_s FruitReaderScan;
 
-fruitreaderscan *fruitreaderscan_new(void);
+FruitReaderScan *fruitreaderscan_new(void);
 /*!
   Инициализация потока для считывания со стандартного ввода.
 */
-void fruitreaderscan_constructor(fruitreaderscan * const this);
-void fruitreaderscan_destructor(fruitreaderscan * const this);
+void fruitreaderscan_constructor(FruitReaderScan * const this);
+void fruitreaderscan_destructor(FruitReaderScan * const this);
 
 #endif

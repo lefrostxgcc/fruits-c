@@ -19,15 +19,15 @@ static fruitreaderstring_vtable fruitreaderstring_vt =
    .farraylist = fruitreaderstring_arraylist
   };
 
-fruitreaderstring *fruitreaderstring_new(void)
+FruitReaderString *fruitreaderstring_new(void)
 {
-  return (fruitreaderstring *) malloc(sizeof(fruitreaderstring));
+  return (FruitReaderString *) malloc(sizeof(FruitReaderString));
 }
 
-void fruitreaderstring_constructor(fruitreaderstring * const this,
+void fruitreaderstring_constructor(FruitReaderString * const this,
                                    const char *input)
 {
-  fruitreader_constructor((fruitreader *) this);
+  fruitreader_constructor((FruitReader *) this);
 
   const char pattern[] = "chipfruitreaderXXXXXX";
   const size_t tmpdir_len = strlen(P_tmpdir);

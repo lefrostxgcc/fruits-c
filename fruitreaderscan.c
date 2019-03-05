@@ -18,24 +18,24 @@ static fruitreaderscan_vtable fruitreaderscan_vt =
    .farraylist = fruitreaderscan_arraylist
   };
 
-fruitreaderscan *fruitreaderscan_new(void)
+FruitReaderScan *fruitreaderscan_new(void)
 {
-  return (fruitreaderscan *) malloc(sizeof(fruitreaderscan));
+  return (FruitReaderScan *) malloc(sizeof(FruitReaderScan));
 }
 
-void fruitreaderscan_constructor(fruitreaderscan * const this)
+void fruitreaderscan_constructor(FruitReaderScan * const this)
 {
-  fruitreader_constructor((fruitreader *) this);
+  fruitreader_constructor((FruitReader *) this);
   this->vt = &fruitreaderscan_vt;
   this->br = stdin; 
 }
 
-void fruitreaderscan_destructor(fruitreaderscan * const this)
+void fruitreaderscan_destructor(FruitReaderScan * const this)
 {
 }
 
 
-void fruitreaderscan_destructor_vf(fruitreader * const this)
+void fruitreaderscan_destructor_vf(FruitReader * const this)
 {
-  fruitreaderscan_destructor((fruitreaderscan *) this);
+  fruitreaderscan_destructor((FruitReaderScan *) this);
 }

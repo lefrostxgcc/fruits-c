@@ -19,21 +19,21 @@ static fruitreaderstringarray_vtable fruitreaderstringarray_vt =
    .farraylist = fruitreaderstringarray_arraylist
   };
 
-fruitreaderstringarray *fruitreaderstringarray_new(void)
+FruitReaderStringArray *fruitreaderstringarray_new(void)
 {
-  return (fruitreaderstringarray *) malloc(sizeof(fruitreaderstringarray));
+  return (FruitReaderStringArray *) malloc(sizeof(FruitReaderStringArray));
 }
 
-void fruitreaderstringarray_constructor(fruitreaderstringarray * const this,
+void fruitreaderstringarray_constructor(FruitReaderStringArray * const this,
                                         char *array[], int size)
 {
   char *s = array_to_string(array, size);
-  fruitreaderstring_constructor((fruitreaderstring *) this, s);
+  fruitreaderstring_constructor((FruitReaderString *) this, s);
   this->vt = &fruitreaderstringarray_vt;
   free(s);
 }
 
-void fruitreaderstringarray_constructor_list(fruitreaderstringarray * const this,
+void fruitreaderstringarray_constructor_list(FruitReaderStringArray * const this,
                                              ArrayList *list)
 {
   char **array = NULL;

@@ -9,15 +9,15 @@
   \author Chip
 */
 
-typedef struct fruitreaderstring_s fruitreaderstring;
+typedef struct fruitreaderstring_s FruitReaderString;
 
-fruitreaderstring *fruitreaderstring_new(void);
+FruitReaderString *fruitreaderstring_new(void);
 /*!
   Формирование потока на основе строки данных
   \param input строка символов с исходными данными
 */
-void fruitreaderstring_constructor(fruitreaderstring * const this,
+void fruitreaderstring_constructor(FruitReaderString * const this,
                                    const char *input);
-void fruitreaderstring_destructor(fruitreaderstring * const this);
+void fruitreaderstring_destructor(FruitReaderString * const this);
 
 #endif

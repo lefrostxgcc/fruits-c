@@ -10,16 +10,16 @@
   Содержит основной метод для получения списка из BufferedReader потока.
 */
 
-typedef struct fruitreader_s fruitreader;
+typedef struct fruitreader_s FruitReader;
 
-fruitreader *fruitreader_new(void);
-void fruitreader_delete(fruitreader *this);
-void fruitreader_constructor(fruitreader * const this);
-void fruitreader_destructor(fruitreader * const this);
+FruitReader *fruitreader_new(void);
+void fruitreader_delete(FruitReader *this);
+void fruitreader_constructor(FruitReader * const this);
+void fruitreader_destructor(FruitReader * const this);
 /**
  Считывает данные из потока
  \return сформированный список фруктов
  */
-ArrayList *fruitreader_read(fruitreader * const this);
+ArrayList *fruitreader_read(FruitReader * const this);
 
 #endif

@@ -10,17 +10,17 @@
   \author Chip
 */
 
-typedef struct fruitreaderstringarray_s fruitreaderstringarray;
+typedef struct fruitreaderstringarray_s FruitReaderStringArray;
 
-fruitreaderstringarray *fruitreaderstringarray_new(void);
+FruitReaderStringArray *fruitreaderstringarray_new(void);
 /*!
   Конструктор
   \param array массив из строк
 */
-void fruitreaderstringarray_constructor(fruitreaderstringarray * const this,
+void fruitreaderstringarray_constructor(FruitReaderStringArray * const this,
                                         char *array[], int size);
-void fruitreaderstringarray_constructor_list(fruitreaderstringarray * const this,
+void fruitreaderstringarray_constructor_list(FruitReaderStringArray * const this,
                                              ArrayList *list);
-void fruitreaderstringarray_destructor(fruitreaderstringarray * const this);
+void fruitreaderstringarray_destructor(FruitReaderStringArray * const this);
 
 #endif
