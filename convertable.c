@@ -13,6 +13,7 @@ String *convertable_convert(Convertable * const this, const HashMap *map)
 
 void convertable_destructor(Convertable * const this)
 {
-  this->vptr->fvoid[CONVERTABLE_DESTRUCTOR](this);
+  if (this)
+    this->vptr->fvoid[CONVERTABLE_DESTRUCTOR](this);
 }
 

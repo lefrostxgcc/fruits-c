@@ -46,7 +46,8 @@ void fruitreader_constructor(fruitreader * const this)
 
 void fruitreader_destructor(fruitreader * const this)
 {
-  this->vt->fvoid[FRUITREADER_DESTRUCTOR](this);
+  if (this)
+    this->vt->fvoid[FRUITREADER_DESTRUCTOR](this);
 }
 
 void fruitreader_destructor_vf(fruitreader * const this)

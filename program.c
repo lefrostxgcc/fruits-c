@@ -23,8 +23,6 @@
 #include <fruitreaderstringarray.h>
 
 static void start(fruitreader *fr, Convertable *co);
-static Convertable *parse_args_convert(int argc, char *argv[]);
-static fruitreader *parse_args_freader(int argc, char *argv[]);
 static void show_manual(void);
 static void parse_args(int argc, char *argv[]);
 static void create(ArrayList *params);
@@ -42,15 +40,14 @@ int main(int argc, char *argv[])
 {
   start_code();
   parse_args(argc, argv);
+  if (fr == NULL)
+    return 0;
   start(fr, co);
   exit_code();
 }
 
 static void start_code(void)
 {
-  fruitreaderscan *frscan = fruitreaderscan_new();
-  fruitreaderscan_constructor(frscan);
-  fr = (fruitreader *) frscan;
   ConvertRAW *convertRAW = convertraw_new();
   convertraw_constructor(convertRAW);
   co = (Convertable *) convertRAW;
@@ -66,6 +63,11 @@ static void exit_code(void)
 
 static void parse_args(int argc, char *argv[])
 {
+  if (argc <= 1)
+    {
+      show_manual();
+      return;
+    }
   ArrayList *params = arraylist_new();
   arraylist_constructor(params);
   for (int i = 1; i < argc; i++)
@@ -130,13 +132,34 @@ static void create(ArrayList *params)
       show_manual();
       return;
     }
-}
-
-static Convertable *parse_args_convert(int argc, char *argv[])
-{
-  ConvertRAW *convertRAW = convertraw_new();
-  convertraw_constructor(convertRAW);
-  return (Convertable *) convertRAW;
+  if (params_size == 2 && strcmp(object_data(arraylist_get(params, 0)), "-format") == 0)
+    {
+      if (strcmp(object_data(arraylist_get(params, 1)), "raw") == 0)
+        {
+          ConvertRAW *convertRAW = convertraw_new();
+          convertraw_constructor(convertRAW);
+          convertable_destructor(co);
+          convertable_delete(co);
+          co = (Convertable *) convertRAW;
+        }
+      else if (strcmp(object_data(arraylist_get(params, 1)), "xml") == 0)
+        {
+          ConvertXML *convertXML = convertxml_new();
+          convertxml_constructor(convertXML);
+          convertable_destructor(co);
+          convertable_delete(co);
+          co = (Convertable *) convertXML;
+        }
+      else if (strcmp(object_data(arraylist_get(params, 1)), "json") == 0)
+        {
+          ConvertJSON *convertJSON = convertjson_new();
+          convertjson_constructor(convertJSON);
+          convertable_destructor(co);
+          convertable_delete(co);
+          co = (Convertable *) convertJSON;
+        }
+      return;
+    }
 }
 
 /**
@@ -170,30 +193,4 @@ static void show_manual(void)
   printf(" -file filename\tLoad Fruits from text file\n");
   printf(" -scan \t\t\tLoad Fruits from Standard input\n");
   printf(" -data FRUIT1..\tLoad list of fruits\n");
-}
-
-static fruitreader *parse_args_freader(int argc, char *argv[])
-{
-  fruitreader *fr = NULL;
-  if (argc == 3 && strcmp(argv[1], "-file") == 0)
-    {
-      fruitreaderfile *frfile = fruitreaderfile_new();
-      fruitreaderfile_constructor(frfile, argv[2]);
-      fr = (fruitreader *) frfile;
-    }
-  else if (argc == 2 && strcmp(argv[1], "-scan") == 0)
-    {
-      fruitreaderscan *frscan = fruitreaderscan_new();
-      fruitreaderscan_constructor(frscan);
-      fr = (fruitreader *) frscan;
-    }
-  else if (argc >= 3 && strcmp(argv[1], "-data") == 0)
-    {
-      fruitreaderstringarray *frarray = fruitreaderstringarray_new();
-      fruitreaderstringarray_constructor(frarray, argv + 2, argc - 2);
-      fr = (fruitreader *) frarray;
-    }
-  else
-    show_manual();
-  return fr;
 }
