@@ -1,3 +1,9 @@
+/**
+ * @file
+ * Оформление результата в JSON-стандарте
+ * @author Chip
+ */
+
 #ifndef CONVERTJSON_H
 #define CONVERTJSON_H
 

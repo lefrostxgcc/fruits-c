@@ -1,3 +1,9 @@
+/**
+ * @file
+ * Вывод результата в XML-формате виде
+ * @author Chip
+ */
+
 #ifndef CONVERTXML_H
 #define CONVERTXML_H
 

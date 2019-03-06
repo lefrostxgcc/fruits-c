@@ -1,3 +1,11 @@
+/**
+ * @file
+ * Фабрика парсинга параметров командной строки.
+ * Цель фабрики - создание объектов
+ * FruitReader и Convertable.
+ * @author Chip
+ */
+
 #ifndef PARAMFACTORY_H
 #define PARAMFACTORY_H
 
@@ -12,7 +20,13 @@ typedef struct
   bool isHelp;
 } ParamFactory;
 
-void paramfactory_constructor(ParamFactory * const this, int argc, char *argv[]);
+/**
+ * Инициализация и запуск фабрики.
+ * @param args аргументы командной строки.
+ */
+void paramfactory_constructor(ParamFactory * const this,
+                              int argc, char *argv[]);
+
 void paramfactory_destructor(ParamFactory * const this);
 FruitReader *paramfactory_fruitReader(ParamFactory * const this);
 Convertable *paramfactory_convertable(ParamFactory * const this);

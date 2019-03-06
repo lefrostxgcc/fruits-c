@@ -57,13 +57,16 @@ static void start(ParamFactory *pf)
   arraylist_delete(list);
 }
 
+/**
+ * Вывести на экран встроенную инструкцию пользователя
+ */
 static void show_manual(void)
 {
   printf("Program: error, no options specified.\n");
-  printf("Usage: ./program [-help] [-format json|xml|raw] "
-         "[-file filename]|[-scan]|[-data data]\n");
-  printf(" -format\t\tUse specified format, default raw\n");
-  printf(" -file filename\tLoad Fruits from text file\n");
+  printf("Usage: ./program [options]]\n");
+  printf(" -help \t\tShow this help\n");
   printf(" -scan \t\t\tLoad Fruits from Standard input\n");
-  printf(" -data FRUIT1..\tLoad list of fruits\n");
+  printf(" -file filename\tLoad Fruits from text file\n");
+  printf(" -data [list]\tLoad inline list of fruits\n");
+  printf(" -format\t\tUse specified output format: XML, JSON, RAW. Default RAW\n");
 }

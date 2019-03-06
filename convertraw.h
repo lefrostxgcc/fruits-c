@@ -1,3 +1,11 @@
+/**
+ * @file
+ * Вывод результата в "сыром" виде,
+ * в многострочном формате аля
+ * task=answer
+ * @author Chip
+ */
+
 #ifndef CONVERTRAW_H
 #define CONVERTRAW_H
 
