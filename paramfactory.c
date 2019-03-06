@@ -1,4 +1,4 @@
-#include <paramfabric.h>
+#include <paramfactory.h>
 #include <object_cstr.h>
 #include <fruitreaderscan.h>
 #include <fruitreaderfile.h>
@@ -8,17 +8,17 @@
 #include <convertjson.h>
 #include <string.h>
 
-static void create(ParamFabric * const this, ArrayList *params);
+static void create(ParamFactory * const this, ArrayList *params);
 static Convertable *create_convertable(const char *format);
 
-void paramfabric_constructor(ParamFabric * const this, int argc, char *argv[])
+void paramfactory_constructor(ParamFactory * const this, int argc, char *argv[])
 {
   this->fruitReader = NULL;
   this->convertable = NULL;
-  this->showHelp = false;
+  this->isHelp = false;
   if (argc <= 1)
     {
-      this->showHelp = true;
+      this->isHelp = true;
       return;
     }
   ArrayList *params = arraylist_new();
@@ -44,7 +44,7 @@ void paramfabric_constructor(ParamFabric * const this, int argc, char *argv[])
   arraylist_delete(params);
 }
 
-void paramfabric_destructor(ParamFabric * const this)
+void paramfactory_destructor(ParamFactory * const this)
 {
   fruitreader_destructor(this->fruitReader);
   fruitreader_delete(this->fruitReader);
@@ -52,10 +52,10 @@ void paramfabric_destructor(ParamFabric * const this)
   convertable_destructor(this->convertable);
   convertable_delete(this->convertable);
   this->convertable = NULL;
-  this->showHelp = false;
+  this->isHelp = false;
 }
 
-static void create(ParamFabric * const this, ArrayList *params)
+static void create(ParamFactory * const this, ArrayList *params)
 {
   int params_size = arraylist_size(params);
   if (params_size == 0)
@@ -93,7 +93,7 @@ static void create(ParamFabric * const this, ArrayList *params)
     }
   if (params_size == 1 && strcmp(object_data(arraylist_get(params, 0)), "-help") == 0)
     {
-      this->showHelp = true;
+      this->isHelp = true;
       return;
     }
   if (params_size == 2 && strcmp(object_data(arraylist_get(params, 0)), "-format") == 0)
@@ -105,27 +105,48 @@ static void create(ParamFabric * const this, ArrayList *params)
     }
 }
 
+FruitReader *paramfactory_fruitReader(ParamFactory * const this)
+{
+  if (this)
+    return this->fruitReader;
+  return NULL;
+}
+
+Convertable *paramfactory_convertable(ParamFactory * const this)
+{
+  if (this)
+    return this->convertable;
+  return NULL;
+}
+
+bool paramfactory_isHelp(ParamFactory * const this)
+{
+  if (this)
+    return this->isHelp;
+  return false;
+}
+
 static Convertable *create_convertable(const char *format)
 {
   if (strcmp(format, "raw") == 0)
     {
-      ConvertRAW *convertRAW = convertraw_new();
-      convertraw_constructor(convertRAW);
-      return (Convertable *) convertRAW;
+      ConvertRaw *convertRaw = convertraw_new();
+      convertraw_constructor(convertRaw);
+      return (Convertable *) convertRaw;
     }
   else if (strcmp(format, "xml") == 0)
     {
-      ConvertXML *convertXML = convertxml_new();
-      convertxml_constructor(convertXML);
-      return (Convertable *) convertXML;
+      ConvertXml *convertXml = convertxml_new();
+      convertxml_constructor(convertXml);
+      return (Convertable *) convertXml;
     }
   else if (strcmp(format, "json") == 0)
     {
-      ConvertJSON *convertJSON = convertjson_new();
-      convertjson_constructor(convertJSON);
-      return (Convertable *) convertJSON;
+      ConvertJson *convertJson = convertjson_new();
+      convertjson_constructor(convertJson);
+      return (Convertable *) convertJson;
     }
-  ConvertJSON *convertJSON = convertjson_new();
-  convertjson_constructor(convertJSON);
-  return (Convertable *) convertJSON;
+  ConvertJson *convertJson = convertjson_new();
+  convertjson_constructor(convertJson);
+  return (Convertable *) convertJson;
 }

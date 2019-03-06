@@ -5,11 +5,11 @@
 #include <chip_string.h>
 #include <hashmap.h>
 
-typedef struct ConvertXML_s ConvertXML;
+typedef struct ConvertXml_s ConvertXml;
 
-ConvertXML *convertxml_new();
-void convertxml_constructor(ConvertXML * const this);
-void convertxml_destructor(ConvertXML * const this);
-String *convertxml_convert(ConvertXML * const this, const HashMap *map);
+ConvertXml *convertxml_new();
+void convertxml_constructor(ConvertXml * const this);
+void convertxml_destructor(ConvertXml * const this);
+String *convertxml_convert(ConvertXml * const this, const HashMap *map);
 
 #endif

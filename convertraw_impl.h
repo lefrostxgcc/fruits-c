@@ -15,7 +15,7 @@ typedef struct convertraw_vtbl_s
   String * (**fstringp)();
 } convertraw_vtbl;
 
-struct ConvertRAW_s
+struct ConvertRaw_s
 {
   convertraw_vtbl *vptr;
 };

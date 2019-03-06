@@ -18,31 +18,31 @@ static convertraw_vtbl convertraw_vt =
    .fstringp = convertraw_stringp
   };
 
-ConvertRAW *convertraw_new()
+ConvertRaw *convertraw_new()
 {
-  return (ConvertRAW *) malloc(sizeof (ConvertRAW));
+  return (ConvertRaw *) malloc(sizeof (ConvertRaw));
 }
 
-void convertraw_constructor(ConvertRAW * const this)
+void convertraw_constructor(ConvertRaw * const this)
 {
   this->vptr = &convertraw_vt;
 }
 
-void convertraw_destructor(ConvertRAW * const this)
+void convertraw_destructor(ConvertRaw * const this)
 {
 }
 
 void convertraw_destructor_vf(Convertable * const this)
 {
-  convertraw_destructor((ConvertRAW *) this);
+  convertraw_destructor((ConvertRaw *) this);
 }
 
 String *convertraw_convert_vf(Convertable * const this, const HashMap *map)
 {
-  return convertraw_convert((ConvertRAW *) this, map);
+  return convertraw_convert((ConvertRaw *) this, map);
 }
 
-String *convertraw_convert(ConvertRAW * const this, const HashMap *map)
+String *convertraw_convert(ConvertRaw * const this, const HashMap *map)
 {
   String *text = string_new();
   string_constructor(text);

@@ -5,11 +5,11 @@
 #include <chip_string.h>
 #include <hashmap.h>
 
-typedef struct ConvertRAW_s ConvertRAW;
+typedef struct ConvertRaw_s ConvertRaw;
 
-ConvertRAW *convertraw_new();
-void convertraw_constructor(ConvertRAW * const this);
-void convertraw_destructor(ConvertRAW * const this);
-String *convertraw_convert(ConvertRAW * const this, const HashMap *map);
+ConvertRaw *convertraw_new();
+void convertraw_constructor(ConvertRaw * const this);
+void convertraw_destructor(ConvertRaw * const this);
+String *convertraw_convert(ConvertRaw * const this, const HashMap *map);
 
 #endif

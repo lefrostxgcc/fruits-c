@@ -18,31 +18,31 @@ static convertxml_vtbl convertxml_vt =
    .fstringp = convertxml_stringp
   };
 
-ConvertXML *convertxml_new()
+ConvertXml *convertxml_new()
 {
-  return (ConvertXML *) malloc(sizeof (ConvertXML));
+  return (ConvertXml *) malloc(sizeof (ConvertXml));
 }
 
-void convertxml_constructor(ConvertXML * const this)
+void convertxml_constructor(ConvertXml * const this)
 {
   this->vptr = &convertxml_vt;
 }
 
-void convertxml_destructor(ConvertXML * const this)
+void convertxml_destructor(ConvertXml * const this)
 {
 }
 
 void convertxml_destructor_vf(Convertable * const this)
 {
-  convertxml_destructor((ConvertXML *) this);
+  convertxml_destructor((ConvertXml *) this);
 }
 
 String *convertxml_convert_vf(Convertable * const this, const HashMap *map)
 {
-  return convertxml_convert((ConvertXML *) this, map);
+  return convertxml_convert((ConvertXml *) this, map);
 }
 
-String *convertxml_convert(ConvertXML * const this, const HashMap *map)
+String *convertxml_convert(ConvertXml * const this, const HashMap *map)
 {
   String *text = string_new_concat("<?xml version=\"1.0\">\n<XML>\n", NULL);
   int map_size = hashmap_get_size(map);

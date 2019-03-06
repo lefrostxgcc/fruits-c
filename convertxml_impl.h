@@ -15,7 +15,7 @@ typedef struct convertxml_vtbl_s
   String * (**fstringp)();
 } convertxml_vtbl;
 
-struct ConvertXML_s
+struct ConvertXml_s
 {
   convertxml_vtbl *vptr;
 };

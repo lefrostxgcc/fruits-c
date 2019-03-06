@@ -15,7 +15,7 @@ typedef struct convertjson_vtbl_s
   String * (**fstringp)();
 } convertjson_vtbl;
 
-struct ConvertJSON_s
+struct ConvertJson_s
 {
   convertjson_vtbl *vptr;
 };

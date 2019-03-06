@@ -12,9 +12,9 @@
 #include <logic.h>
 #include <convertable.h>
 #include <fruitreader.h>
-#include <paramfabric.h>
+#include <paramfactory.h>
 
-static void start(ParamFabric *pf);
+static void start(ParamFactory *pf);
 static void show_manual(void);
 
 /*!
@@ -22,28 +22,30 @@ static void show_manual(void);
 */
 int main(int argc, char *argv[])
 {
-  ParamFabric pf;
-  paramfabric_constructor(&pf, argc, argv);
+  ParamFactory pf;
+  paramfactory_constructor(&pf, argc, argv);
   start(&pf);
-  paramfabric_destructor(&pf);
+  paramfactory_destructor(&pf);
 }
 
 /**
    Решение основной задачи
    \param[in] fr - Выбранный класс для считывания начальных данных
 */
-static void start(ParamFabric *pf)
+static void start(ParamFactory *pf)
 {
-  if (pf->showHelp || pf->fruitReader == NULL || pf->convertable == NULL)
+  if (paramfactory_isHelp(pf)
+      || paramfactory_fruitReader(pf) == NULL
+      || paramfactory_convertable(pf) == NULL)
     {
       show_manual();
       return;
     }
-  ArrayList *list = fruitreader_read(pf->fruitReader);
+  ArrayList *list = fruitreader_read(paramfactory_fruitReader(pf));
   Logic *logic = logic_new();
   logic_constructor(logic, list);
   HashMap *map = logic_get_task(logic);
-  String *answer = convertable_convert(pf->convertable, map);
+  String *answer = convertable_convert(paramfactory_convertable(pf), map);
   printf("%s\n", answer ? string_data(answer) : "task error");
   string_destructor(answer);
   string_delete(answer);

@@ -5,11 +5,11 @@
 #include <chip_string.h>
 #include <hashmap.h>
 
-typedef struct ConvertJSON_s ConvertJSON;
+typedef struct ConvertJson_s ConvertJson;
 
-ConvertJSON *convertjson_new();
-void convertjson_constructor(ConvertJSON * const this);
-void convertjson_destructor(ConvertJSON * const this);
-String *convertjson_convert(ConvertJSON * const this, const HashMap *map);
+ConvertJson *convertjson_new();
+void convertjson_constructor(ConvertJson * const this);
+void convertjson_destructor(ConvertJson * const this);
+String *convertjson_convert(ConvertJson * const this, const HashMap *map);
 
 #endif

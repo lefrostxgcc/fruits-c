@@ -18,31 +18,31 @@ static convertjson_vtbl convertjson_vt =
    .fstringp = convertjson_stringp
   };
 
-ConvertJSON *convertjson_new()
+ConvertJson *convertjson_new()
 {
-  return (ConvertJSON *) malloc(sizeof (ConvertJSON));
+  return (ConvertJson *) malloc(sizeof (ConvertJson));
 }
 
-void convertjson_constructor(ConvertJSON * const this)
+void convertjson_constructor(ConvertJson * const this)
 {
   this->vptr = &convertjson_vt;
 }
 
-void convertjson_destructor(ConvertJSON * const this)
+void convertjson_destructor(ConvertJson * const this)
 {
 }
 
 void convertjson_destructor_vf(Convertable * const this)
 {
-  convertjson_destructor((ConvertJSON *) this);
+  convertjson_destructor((ConvertJson *) this);
 }
 
 String *convertjson_convert_vf(Convertable * const this, const HashMap *map)
 {
-  return convertjson_convert((ConvertJSON *) this, map);
+  return convertjson_convert((ConvertJson *) this, map);
 }
 
-String *convertjson_convert(ConvertJSON * const this, const HashMap *map)
+String *convertjson_convert(ConvertJson * const this, const HashMap *map)
 {
   if (hashmap_get_size(map) == 0)
     return string_new_concat("{}", NULL);
